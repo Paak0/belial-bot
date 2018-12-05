@@ -7,7 +7,8 @@ bot.on('ready', () => {
 
 bot.on('message', message => {
     if (message.content === 'ping') {
-    	message.reply('pongg');
+    	//message.reply('pongg');
+        message.channel.sendMessage(message.content[0]);
   	}
 });
 
