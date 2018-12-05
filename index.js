@@ -6,9 +6,10 @@ bot.on('ready', () => {
 });
 
 bot.on('message', message => {
-    if (message.content === 'ping') {
+    if (message.content[0] === '!') {
+        
     	//message.reply('pongg');
-        message.channel.sendMessage(message.content[0]);
+        message.channel.sendMessage('haha');
   	}
 });
 
