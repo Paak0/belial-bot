@@ -1,13 +1,18 @@
 const Discord = require('discord.js');
 const bot = new Discord.Client();
+const commands = ['!avatar', ''];
+
 
 bot.on('ready', () => {
     console.log('I am ready!');
 });
 
 bot.on('message', message => {
-    if (message.content[0] === '!') {
-        
+    let command = message.content;
+    if (command[0] === '!') {
+        if(command === commands[0]){
+            message.reply(message.author.avatarURL);
+        }
     	//message.reply('pongg');
         message.channel.sendMessage('haha');
   	}
