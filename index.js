@@ -11,10 +11,14 @@ bot.on('message', message => {
     let command = message.content;
     if (command[0] === '!') {
         if(command === commands[0]){
-            message.reply(message.author.avatarURL);
+            message.channel.sendMessage(message.author.avatarURL);
         }
+        
+        
+        
+        
+        
     	//message.reply('pongg');
-        message.channel.sendMessage('haha');
   	}
 });
 
