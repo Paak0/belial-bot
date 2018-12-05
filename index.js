@@ -11,7 +11,7 @@ bot.on('message', message => {
     let command = message.content;
     if (command[0] === '!') {
         if(command === commands[0]){
-            message.channel.sendMessage(message.author.avatarURL);
+            message.channel.sendMessage('```'[message.author.avatarURL](link)'```');
         }
         
         
