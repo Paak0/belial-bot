@@ -12,14 +12,16 @@ bot.on('message', message => {
     if (command[0] === '!') {
         if(command === commands[0]){
             //message.reply(message.author.avatarURL);
-            let attachment = new Attachment(message.author.avatarURL);
-            message.channel.send(attachment);
+            message.channel.send({"embed": {
+                "image": {
+                  "url": "https://cdn.discordapp.com/embed/avatars/0.png"
+                }
+            }});
+            
+            
+            
+            
         }
-        
-        
-        
-        
-        
     	//message.reply('pongg');
   	}
 });
