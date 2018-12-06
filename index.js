@@ -9,7 +9,7 @@ bot.on('ready', () => {
 
 bot.on('message', message => {
     if(message.author.bot) return;
-    
+    const member = message.mentions.members.first();
     //if(message.mentions.members.first()) message.channel.send(message.mentions.members.first().user.avatarURL); //works
 
     let command = message.content;
@@ -18,9 +18,13 @@ bot.on('message', message => {
 
     
     if(command === '!avatar'){
-
-        if(message.mentions.members.first()){
+        if(member){
             message.channel.send(message.mentions.members.first().user.avatarURL);
+            return;
+        }
+        message.channel.send(message.author.avatarURL);
+        /*
+        if(message.mentions.members.first()){
             message.channel.send({"embed": {
                 "image": {
                   "url": message.mentions.members.first().user.displayAvatarURL
@@ -33,7 +37,7 @@ bot.on('message', message => {
                 }
             }});
         }
-        /*
+        
         let url = '';
         if(message.mentions.members.first()){
             url = message.mentions.members.first().user.avatarURL;
