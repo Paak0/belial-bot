@@ -15,7 +15,7 @@ bot.on('message', message => {
             .setTitle(`Title`)
             .setDescription(`Desc`)
             .addField("Title", "Description");
-            message.channel.sendEmbed(embed);
+            message.channel.sendEmbed({embed});
         }
         
         
