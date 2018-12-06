@@ -15,13 +15,14 @@ bot.on('message', message => {
     if(command === 'ping') message.channel.send('pongogongo');
     
     
-    
     const member = message.mentions.members.first();
     //if(message.mentions.members.first()) message.channel.send(message.mentions.members.first().user.avatarURL); //works
     if(member) message.channel.send(member.user.avatarURL);
     
+    
+    
     if(command === '!avatar'){
-        message.channel.send(member.user.avatarURL);
+        if(member) message.channel.send(member.user.avatarURL);
        
         message.channel.send(message.author.avatarURL);
         /*
@@ -53,7 +54,7 @@ bot.on('message', message => {
             }
         }});
         */
-        message.channel.send('UHOHOHOOOHO');
+        //message.channel.send('UHOHOHOOOHO');
     }
     //message.reply('pongg');
     
