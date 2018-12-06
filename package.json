@@ -1,10 +1,9 @@
 {
-  "name": "Test",
-  "description": "Test",
+  "name": "Belial",
+  "description": "Belial-bot",
   "version": "0.0.0",
   "main": "index.js",
   "dependencies": {
-    "cloudinary": "^1.13.2",
     "discord.js": "^11.1.0",
     "jimp": "^0.6.0"
   }
