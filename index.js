@@ -15,8 +15,8 @@ bot.on('message', message => {
              message.channel.sendEmbed({embed: {
               color: 3447003,
               description: 'Avatar link',
-              url: `message.author.avatarURL`,
-              image: `message.author.avatarURL`
+              url: message.author.avatarURL,
+              image: message.author.avatarURL
             }});
         }
         
