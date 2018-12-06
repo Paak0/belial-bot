@@ -13,9 +13,11 @@ bot.on('message', message => {
     
         let command = message.content;
 
+        if(command === 'ping') message.channel.sendMessage('pongogongo');
+        
         if (command[0] === '!') {
             if(command === commands[0]){
-                let user = message.mentions.members.first().user || message.author;
+                let person = message.mentions.members.first().user || message.author;
                 /*
                 let url = '';
                 if(message.mentions.members.first()){
@@ -27,7 +29,7 @@ bot.on('message', message => {
                 */
                 message.channel.send({"embed": {
                     "image": {
-                      "url": user.displayAvatarURL
+                      "url": person.displayAvatarURL
                     }
                 }});
                 message.channel.sendMessage('UHOHOHOOOHO');
