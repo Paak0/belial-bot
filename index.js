@@ -14,7 +14,7 @@ bot.on('message', message => {
         let command = message.content;
 
         //let mention = message.mentions.users.array();
-        if(message.mentions.users){
+        if(message.mentions.members.first()){
             message.channel.sendMessage("mention is up");
             //message.channel.sendMessage(message.mentions.users.array()[0].username);
         }
