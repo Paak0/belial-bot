@@ -9,18 +9,22 @@ bot.on('ready', () => {
 
 bot.on('message', message => {
     let command = message.content;
+    let mention = message.mentions.users.first();
+    
     if (command[0] === '!') {
         if(command === commands[0]){
-            //message.reply(message.author.avatarURL);
+            let url = '';
+            if(mention){
+                url = mention.avatarURL;
+            }else{
+                url = message.author.avatarURL;
+            }
+            
             message.channel.send({"embed": {
                 "image": {
-                  "url": message.author.avatarURL
+                  "url": url
                 }
             }});
-            
-            
-            
-            
         }
     	//message.reply('pongg');
   	}
