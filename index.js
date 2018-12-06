@@ -11,11 +11,7 @@ bot.on('message', message => {
     let command = message.content;
     if (command[0] === '!') {
         if(command === commands[0]){
-            var embed = new Discord.RichEmbed()
-            .setTitle(`Title`)
-            .setDescription(`Desc`)
-            .addField("Title", "Description");
-            message.channel.sendEmbed({embed});
+            message.reply(message.author.avatarURL);
         }
         
         
