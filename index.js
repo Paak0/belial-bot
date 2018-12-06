@@ -14,7 +14,7 @@ bot.on('message', message => {
             let embed = new Discord.RichEmbed();
             embed.setTitle('Avatar link');
             embed.setURL(message.author.avatarURL);
-            message.channel.sendMessage(embed);
+            message.channel.send(embed);
         }
         
         
