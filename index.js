@@ -8,29 +8,35 @@ bot.on('ready', () => {
 });
 
 bot.on('message', message => {
-    let command = message.content;
     
-    //let mention = message.mentions.users.array();
-    if(message.mentions){
-        message.channel.sendMessage("mention is up");
-        //message.channel.sendMessage(message.mentions.users.array()[0].username);
-    }
+    if(!message.author.bot){
     
-    
-    if (command[0] === '!') {
-        if(command === commands[0]){
-            let url = message.author.avatarURL;
-           
-            //message.channel.sendMessage(url);
-            message.channel.send({"embed": {
-                "image": {
-                  "url": url
-                }
-            }});
+        let command = message.content;
+
+        //let mention = message.mentions.users.array();
+        if(message.mentions){
+            message.channel.sendMessage("mention is up");
+            //message.channel.sendMessage(message.mentions.users.array()[0].username);
         }
-    	//message.reply('pongg');
-  	}
-    message.reply('UHOHOHOOOHO');
+
+
+        if (command[0] === '!') {
+            if(command === commands[0]){
+                let url = message.author.avatarURL;
+
+                //message.channel.sendMessage(url);
+                message.channel.send({"embed": {
+                    "image": {
+                      "url": url
+                    }
+                }});
+            }
+            //message.reply('pongg');
+        }
+
+        message.reply('UHOHOHOOOHO');
+        
+    }
 });
 
 bot.login(process.env.BOT_TOKEN);
