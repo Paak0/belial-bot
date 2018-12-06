@@ -49,15 +49,12 @@ bot.on('message', message => {
 					Jimp.read(img1).then( function(front1){
 						front1.resize(100, 100);
 						Jimp.read(bg).then( function(back){
-							back.composite(front2, 60, 280);
-							back.composite(front1, 220, 140);
-							back.write('images/slapped.png', function(){
-								message.channel.send({
-								  files: [{
-									attachment: 'images/slapped.png',
-									name: 'slapped.png'
-								  }]
-								});
+							back.composite(front2, 60, 280).composite(front1, 220, 140).getBuffer(Jimp.MIME_PNG, (err, buffer) => {
+								if(err){
+									console.log('Oh no');
+									return;
+								}
+								message.channel.send({ files: [{ attachment: buffer, name: 'slapped.png'}] });
 							});
 						});
 					});
