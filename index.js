@@ -11,7 +11,10 @@ bot.on('message', message => {
     let command = message.content;
     if (command[0] === '!') {
         if(command === commands[0]){
-            message.channel.sendMessage(`[message.author.avatarURL](link)`);
+             let avatar = new RichEmbed();
+            .setTitle('Avatar link');
+            .setURL(message.author.avatarURL);
+            message.channel.sendMessage(avatar);
         }
         
         
