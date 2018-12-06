@@ -16,40 +16,41 @@ bot.on('message', message => {
 
     if(command === 'ping') message.channel.send('pongogongo');
 
-    if (command[0] === '!') {
-        if(command === commands[0]){
+    
+    if(command === '!avatar'){
 
-            if(message.mentions.members.first()){
-                message.channel.send({"embed": {
-                    "image": {
-                      "url": message.mentions.members.first().user.avatarURL
-                    }
-                }});   
-            }else{
-                 message.channel.send({"embed": {
-                    "image": {
-                      "url": message.author.avatarURL
-                    }
-                }});
-            }
-            /*
-            let url = '';
-            if(message.mentions.members.first()){
-                url = message.mentions.members.first().user.avatarURL;
-            }else{
-                url = message.author.avatarURL;
-            }
-            message.channel.sendMessage(url);
-            */
+        if(message.mentions.members.first()){
             message.channel.send({"embed": {
                 "image": {
-                  "url": avUrl
+                  "url": message.mentions.members.first().user.avatarURL
+                }
+            }});   
+        }else{
+             message.channel.send({"embed": {
+                "image": {
+                  "url": message.author.avatarURL
                 }
             }});
-            message.channel.send('UHOHOHOOOHO');
         }
-        //message.reply('pongg');
+        /*
+        let url = '';
+        if(message.mentions.members.first()){
+            url = message.mentions.members.first().user.avatarURL;
+        }else{
+            url = message.author.avatarURL;
+        }
+        message.channel.sendMessage(url);
+        
+        message.channel.send({"embed": {
+            "image": {
+              "url": avUrl
+            }
+        }});
+        */
+        message.channel.send('UHOHOHOOOHO');
     }
+    //message.reply('pongg');
+    
 
     
 });
