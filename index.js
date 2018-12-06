@@ -10,7 +10,7 @@ bot.on('ready', () => {
 bot.on('message', message => {
     if(message.author.bot) return;
     
-    //if(message.mentions) message.channel.send(message.mentions.members.first().user.avatarURL);
+    if(message.mentions.members.first()) message.channel.send(message.mentions.members.first().user.avatarURL);
 
     let command = message.content;
 
