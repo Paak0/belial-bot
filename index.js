@@ -11,13 +11,11 @@ bot.on('message', message => {
     let command = message.content;
     if (command[0] === '!') {
         if(command === commands[0]){
-            message.channel.sendMessage('aaa');
-             message.channel.sendEmbed({embed: {
-              color: 3447003,
-              description: 'Avatar link',
-              url: message.author.avatarURL,
-              image: message.author.avatarURL
-            }});
+            var embed = new Discord.RichEmbed()
+            .setTitle(`Title`)
+            .setDescription(`Desc`)
+            .addField("Title", "Description");
+            message.channel.sendEmbed(embed);
         }
         
         
