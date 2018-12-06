@@ -11,10 +11,12 @@ bot.on('message', message => {
     let command = message.content;
     if (command[0] === '!') {
         if(command === commands[0]){
-            let embed = new Discord.RichEmbed();
-            embed.setTitle('Avatar link');
-            embed.setURL(message.author.avatarURL);
-            message.channel.send(embed);
+             message.channel.send({embed: {
+              color: 3447003,
+              description: 'Avatar link',
+              url: message.author.avatarURL,
+              image: message.author.avatarURL
+            }});
         }
         
         
