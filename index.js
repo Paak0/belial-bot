@@ -10,7 +10,14 @@ bot.on('ready', () => {
 bot.on('message', message => {
     let command = message.content;
     
-    if (command[0] === '!') {
+    let mention = message.mentions.users.array().first();
+    if(mention){
+        message.channel.sendMessage("mention is up");
+        //message.channel.sendMessage(message.mentions.users.array()[0].username);
+    }
+    
+    
+    if (command[0] === '&') {
         if(command === commands[0]){
             let url = '';
             let mention = message.mentions.users.array().first();
