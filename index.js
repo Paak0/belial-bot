@@ -22,6 +22,7 @@ bot.on('message', message => {
                 }else{
                     url = message.author.avatarURL;
                 }
+                message.channel.sendMessage(url);
                 message.channel.send({"embed": {
                     "image": {
                       "url": url
