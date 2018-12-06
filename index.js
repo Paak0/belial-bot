@@ -11,17 +11,15 @@ bot.on('message', message => {
     if(message.author.bot) return;
     const member = message.mentions.members.first();
     //if(message.mentions.members.first()) message.channel.send(message.mentions.members.first().user.avatarURL); //works
-
+    message.channel.send(member.user.avatarURL);
     let command = message.content;
 
     if(command === 'ping') message.channel.send('pongogongo');
 
     
     if(command === '!avatar'){
-        if(member){
-            message.channel.send(message.mentions.members.first().user.avatarURL);
-            return;
-        }
+        message.channel.send(member.user.avatarURL);
+       
         message.channel.send(message.author.avatarURL);
         /*
         if(message.mentions.members.first()){
