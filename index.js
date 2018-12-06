@@ -10,13 +10,16 @@ bot.on('ready', () => {
 bot.on('message', message => {
     
     if(!message.author.bot){
-    
+        message.channel.send(message.users.first().avatarURL);
         let command = message.content;
 
-        if(command === 'ping') message.channel.sendMessage('pongogongo');
+        if(command === 'ping') message.channel.send('pongogongo');
         
         if (command[0] === '!') {
             if(command === commands[0]){
+                
+                
+                
                 let person = message.mentions.users.array()[0] || message.author;
                 /*
                 let url = '';
@@ -32,7 +35,7 @@ bot.on('message', message => {
                       "url": person.displayAvatarURL
                     }
                 }});
-                message.channel.sendMessage('UHOHOHOOOHO');
+                message.channel.send('UHOHOHOOOHO');
             }
             //message.reply('pongg');
         }
