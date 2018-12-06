@@ -14,7 +14,7 @@ bot.on('message', message => {
             //message.reply(message.author.avatarURL);
             message.channel.send({"embed": {
                 "image": {
-                  "url": "https://cdn.discordapp.com/embed/avatars/0.png"
+                  "url": message.author.avatarURL
                 }
             }});
             
