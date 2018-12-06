@@ -12,11 +12,8 @@ bot.on('message', message => {
     if (command[0] === '!') {
         if(command === commands[0]){
             //message.reply(message.author.avatarURL);
-              const embed = new RichEmbed()
-              .setTitle('A slick little embed')
-              .setColor(0xFF0000)
-              .setDescription('Hello, this is a slick embed!');
-            message.channel.send(embed);
+            let attachment = new Attachment(message.author.avatarURL);
+            message.channel.send(attachment);
         }
         
         
