@@ -16,11 +16,12 @@ bot.on('message', message => {
             let mention = message.mentions.users.first() || "l";
             
             if(mention != "l"){
-                url = mention.avatarURL;
+                //url = mention.avatarURL;
+                message.channel.sendMessage(message.mentions[0]);
             }else{
                 url = message.author.avatarURL;
             }
-            message.channel.sendMessage(mention);
+            //message.channel.sendMessage(url);
             message.channel.send({"embed": {
                 "image": {
                   "url": url
