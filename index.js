@@ -17,7 +17,7 @@ bot.on('message', message => {
         
         if (command[0] === '!') {
             if(command === commands[0]){
-                let person = message.mentions.members.first().user || message.author;
+                let person = message.mentions.users.first() || message.author;
                 /*
                 let url = '';
                 if(message.mentions.members.first()){
