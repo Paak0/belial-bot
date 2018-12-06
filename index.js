@@ -12,7 +12,7 @@ bot.on('message', message => {
     if (command[0] === '!') {
         if(command === commands[0]){
             message.channel.sendMessage('aaa');
-             message.channel.send({embed: {
+             message.channel.sendEmbed({embed: {
               color: 3447003,
               description: 'Avatar link',
               url: `message.author.avatarURL`,
