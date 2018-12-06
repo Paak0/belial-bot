@@ -73,8 +73,4 @@ bot.on('message', message => {
 });
 
 
-
-
-let BOT_TOKEN = 'NTIwMDA1MDQ4NjUwOTU2ODIx.DurHUg.TMa-kLm2wC_I6A2dA1uRH_dJdIg';
-bot.login(BOT_TOKEN);
-//bot.login(process.env.BOT_TOKEN);
+bot.login(process.env.BOT_TOKEN);
