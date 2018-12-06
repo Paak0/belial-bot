@@ -17,7 +17,8 @@ bot.on('message', message => {
             
             if(mention != "l"){
                 //url = mention.avatarURL;
-                message.channel.sendMessage(message.mentions[0]);
+                message.channel.sendMessage("mention is up");
+                message.channel.sendMessage(message.mentions.users[0]);
             }else{
                 url = message.author.avatarURL;
             }
