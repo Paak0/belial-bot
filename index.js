@@ -45,7 +45,7 @@ bot.on('message', message => {
 				let out;
 				Jimp.read(img2).then( function(front2){
 					front2.rotate(30);
-					front2.resize(100, 100);
+					front2.resize(120, 120);
 					Jimp.read(img1).then( function(front1){
 						front1.resize(100, 100);
 						Jimp.read(bg).then( function(back){
