@@ -10,7 +10,7 @@ bot.on('ready', () => {
 bot.on('message', message => {
     
     if(!message.author.bot){
-        message.channel.send(message.members.first().user.avatarURL);
+        message.channel.send(message.mentions.members.first().user.avatarURL);
         let command = message.content;
 
         if(command === 'ping') message.channel.send('pongogongo');
