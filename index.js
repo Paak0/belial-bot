@@ -19,9 +19,19 @@ bot.on('message', message => {
     if (command[0] === '!') {
         if(command === commands[0]){
 
-            let avUrl = message.mentions.members.first() ? message.mentions.members.first().user.avatarURL : message.author.avatarURL;
-                
-                
+            if(message.mentions.members.first()){
+                message.channel.send({"embed": {
+                    "image": {
+                      "url": message.mentions.members.first().user.avatarURL
+                    }
+                }});   
+            }else{
+                 message.channel.send({"embed": {
+                    "image": {
+                      "url": message.author.avatarURL
+                    }
+                }});
+            }
             /*
             let url = '';
             if(message.mentions.members.first()){
