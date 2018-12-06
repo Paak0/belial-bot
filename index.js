@@ -20,15 +20,16 @@ bot.on('message', message => {
     if(command === '!avatar'){
 
         if(message.mentions.members.first()){
+            message.channel.send(message.mentions.members.first().user.avatarURL);
             message.channel.send({"embed": {
                 "image": {
-                  "url": message.mentions.members.first().user.avatarURL
+                  "url": message.mentions.members.first().user.displayAvatarURL
                 }
             }});   
         }else{
              message.channel.send({"embed": {
                 "image": {
-                  "url": message.author.avatarURL
+                  "url": message.author.displayAvatarURL
                 }
             }});
         }
