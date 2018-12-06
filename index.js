@@ -15,17 +15,19 @@ bot.on('message', message => {
 
         if (command[0] === '!') {
             if(command === commands[0]){
+                let user = message.mentions.users.first() || message.author;
+                /*
                 let url = '';
-                
                 if(message.mentions.members.first()){
                     url = message.mentions.members.first().user.avatarURL;
                 }else{
                     url = message.author.avatarURL;
                 }
                 message.channel.sendMessage(url);
+                */
                 message.channel.send({"embed": {
                     "image": {
-                      "url": url
+                      "url": user.displayAvatarURL
                     }
                 }});
                 message.channel.sendMessage('UHOHOHOOOHO');
