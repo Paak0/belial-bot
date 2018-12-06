@@ -13,16 +13,16 @@ bot.on('message', message => {
     
         let command = message.content;
 
-        if(message.mentions.members.first()){
-            message.channel.sendMessage("mention is up");
-            message.channel.sendMessage(message.mentions.members.first().user.avatarURL);
-        }
-
-
         if (command[0] === '!') {
             if(command === commands[0]){
-                let url = message.author.avatarURL;
-
+                let url = '';
+                let mention = message.mentions.members.first();
+                
+                if(mention){
+                    url = mention.user.avatarURL;
+                }else{
+                    url = message.author.avatarURL;
+                }
                 message.channel.send({"embed": {
                     "image": {
                       "url": url
