@@ -13,10 +13,9 @@ bot.on('message', message => {
     
         let command = message.content;
 
-        //let mention = message.mentions.users.array();
         if(message.mentions.members.first()){
             message.channel.sendMessage("mention is up");
-            //message.channel.sendMessage(message.mentions.users.array()[0].username);
+            message.channel.sendMessage(message.mentions.members.first().user.avatarURL);
         }
 
 
@@ -24,7 +23,6 @@ bot.on('message', message => {
             if(command === commands[0]){
                 let url = message.author.avatarURL;
 
-                //message.channel.sendMessage(url);
                 message.channel.send({"embed": {
                     "image": {
                       "url": url
@@ -34,7 +32,7 @@ bot.on('message', message => {
             //message.reply('pongg');
         }
 
-        message.reply('UHOHOHOOOHO');
+        message.channel.sendMessage('UHOHOHOOOHO');
         
     }
 });
