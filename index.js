@@ -17,12 +17,12 @@ bot.on('message', message => {
     
     const member = message.mentions.members.first();
     //if(message.mentions.members.first()) message.channel.send(message.mentions.members.first().user.avatarURL); //works
-    if(member) message.channel.send(member.user.avatarURL);
+    //if(member) message.channel.send(member.user.avatarURL);
     
     
     
     if(command === '!avatar'){
-        if(member) message.channel.send(member.user.avatarURL);
+        if(member) message.channel.send("dddddddddd");
        
         message.channel.send(message.author.avatarURL);
         /*
