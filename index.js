@@ -16,10 +16,9 @@ bot.on('message', message => {
         if (command[0] === '!') {
             if(command === commands[0]){
                 let url = '';
-                let mention = message.mentions.members.first();
                 
-                if(mention){
-                    url = mention.user.avatarURL;
+                if(message.mentions.members.first()){
+                    url = message.mentions.members.first().user.avatarURL;
                 }else{
                     url = message.author.avatarURL;
                 }
@@ -28,12 +27,11 @@ bot.on('message', message => {
                       "url": url
                     }
                 }});
+                message.channel.sendMessage('UHOHOHOOOHO');
             }
             //message.reply('pongg');
         }
 
-        message.channel.sendMessage('UHOHOHOOOHO');
-        
     }
 });
 
