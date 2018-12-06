@@ -11,11 +11,12 @@ bot.on('message', message => {
     let command = message.content;
     if (command[0] === '!') {
         if(command === commands[0]){
+            message.channel.sendMessage('aaa');
              message.channel.send({embed: {
               color: 3447003,
               description: 'Avatar link',
-              url: message.author.avatarURL,
-              image: message.author.avatarURL
+              url: `message.author.avatarURL`,
+              image: `message.author.avatarURL`
             }});
         }
         
