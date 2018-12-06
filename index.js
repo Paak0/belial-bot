@@ -17,18 +17,10 @@ bot.on('message', message => {
     }
     
     
-    if (command[0] === '&') {
+    if (command[0] === '!') {
         if(command === commands[0]){
-            let url = '';
-            let mention = message.mentions.users.array().first();
-            
-            if(mention){
-                url = message.mentions.users.array()[0].avatarURL;
-                message.channel.sendMessage("mention is up");
-                message.channel.sendMessage(message.mentions.users.array()[0].username);
-            }else{
-                url = message.author.avatarURL;
-            }
+            let url = message.author.avatarURL;
+           
             //message.channel.sendMessage(url);
             message.channel.send({"embed": {
                 "image": {
@@ -38,6 +30,7 @@ bot.on('message', message => {
         }
     	//message.reply('pongg');
   	}
+    message.reply('UHOHOHOOOHO');
 });
 
 bot.login(process.env.BOT_TOKEN);
