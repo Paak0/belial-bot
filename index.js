@@ -39,7 +39,7 @@ bot.on('message', message => {
 				
 			case commands[3]:
 				if(!message.mentions.users.first()) return;
-				let bg = 'images/slap.png';
+				let bg = 'images/slap.PNG';
 				let img1 = message.author.displayAvatarURL;
 				let img2 = message.mentions.users.first().displayAvatarURL;
 				let out;
