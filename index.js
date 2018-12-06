@@ -9,13 +9,16 @@ bot.on('ready', () => {
 
 bot.on('message', message => {
     if(message.author.bot) return;
+    
+    let command = message.content;
+    
+    if(command === 'ping') message.channel.send('pongogongo');
+    
+    
+    
     const member = message.mentions.members.first();
     //if(message.mentions.members.first()) message.channel.send(message.mentions.members.first().user.avatarURL); //works
-    message.channel.send(member.user.avatarURL);
-    let command = message.content;
-
-    if(command === 'ping') message.channel.send('pongogongo');
-
+    if(member) message.channel.send(member.user.avatarURL);
     
     if(command === '!avatar'){
         message.channel.send(member.user.avatarURL);
