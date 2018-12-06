@@ -1,7 +1,9 @@
+const Jimp = require('jimp');
 const Discord = require('discord.js');
 const bot = new Discord.Client();
-const commands = ['!avatar', ''];
 
+const commands = ['help', 'ping', 'avatar', 'slap'];
+const commandPrefix = '!';
 
 bot.on('ready', () => {
     console.log('I am ready!');
@@ -10,56 +12,72 @@ bot.on('ready', () => {
 bot.on('message', message => {
     if(message.author.bot) return;
     
-    let command = message.content;
-    
-    if(command === 'ping') message.channel.send('pongogongo');
-    
-    
-    const member = message.mentions.members.first();
-    //if(message.mentions.members.first()) message.channel.send(message.mentions.members.first().user.avatarURL); //works
-    //if(member) message.channel.send(member.user.avatarURL);
-    
-    
-    
-    if(command === '!avatar'){
-        if(member) message.channel.send("dddddddddd");
-       
-        message.channel.send(message.author.avatarURL);
-        /*
-        if(message.mentions.members.first()){
-            message.channel.send({"embed": {
-                "image": {
-                  "url": message.mentions.members.first().user.displayAvatarURL
-                }
-            }});   
-        }else{
-             message.channel.send({"embed": {
-                "image": {
-                  "url": message.author.displayAvatarURL
-                }
-            }});
-        }
-        
-        let url = '';
-        if(message.mentions.members.first()){
-            url = message.mentions.members.first().user.avatarURL;
-        }else{
-            url = message.author.avatarURL;
-        }
-        message.channel.sendMessage(url);
-        
-        message.channel.send({"embed": {
-            "image": {
-              "url": avUrl
-            }
-        }});
-        */
-        //message.channel.send('UHOHOHOOOHO');
-    }
+	if(message.content[0] === commandPrefix){	
+		let command = message.content.split(" ")[0].substring(1);
+		
+		switch(command){
+			case commands[0]:
+				message.channel.send({"embed": {
+					"title": 'Available commands:',
+					"description": '1. help \n 2. ping \n 3. avatar'
+				}});
+				break;
+			case commands[1]:
+				message.channel.send('pongogongo');		//ping
+				break;
+				
+			case commands[2]:
+				let user = '';
+				message.mentions.users.first() ? user = message.mentions.users.first() : user = message.author;
+				message.channel.send({"embed": {
+					"image": {
+					  "url": user.displayAvatarURL
+					}
+				}});
+				message.channel.send('UHOHOHOOOHO');
+				break;
+				
+			case commands[3]:
+				if(!message.mentions.users.first()) return;
+				let bg = 'images/slap.png';
+				let img1 = message.author.displayAvatarURL;
+				let img2 = message.mentions.users.first().displayAvatarURL;
+				let out;
+				Jimp.read(img2).then( function(front2){
+					front2.rotate(30);
+					front2.resize(100, 100);
+					Jimp.read(img1).then( function(front1){
+						front1.resize(100, 100);
+						Jimp.read(bg).then( function(back){
+							back.composite(front2, 60, 280);
+							back.composite(front1, 220, 140);
+							back.write('images/slapped.png', function(){
+								message.channel.send({
+								  files: [{
+									attachment: 'images/slapped.png',
+									name: 'slapped.png'
+								  }]
+								});
+							});
+						});
+					});
+				});
+				
+				break;
+			
+			default:
+				message.channel.send('Oi, ');
+		}
+		
+		
     //message.reply('pongg');
     
-
-    
+	}
 });
 
-bot.login(process.env.BOT_TOKEN);
+
+
+
+let BOT_TOKEN = 'NTIwMDA1MDQ4NjUwOTU2ODIx.DurHUg.TMa-kLm2wC_I6A2dA1uRH_dJdIg';
+bot.login(BOT_TOKEN);
+//bot.login(process.env.BOT_TOKEN);
