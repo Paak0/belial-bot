@@ -8,39 +8,38 @@ bot.on('ready', () => {
 });
 
 bot.on('message', message => {
+    if(message.author.bot) return;
     
-    if(!message.author.bot){
-        message.channel.send(message.mentions.members.first().user.avatarURL);
-        let command = message.content;
+    //if(message.mentions) message.channel.send(message.mentions.members.first().user.avatarURL);
 
-        if(command === 'ping') message.channel.send('pongogongo');
-        
-        if (command[0] === '!') {
-            if(command === commands[0]){
-                
-                
-                
-                let person = message.mentions.users.array()[0] || message.author;
-                /*
-                let url = '';
-                if(message.mentions.members.first()){
-                    url = message.mentions.members.first().user.avatarURL;
-                }else{
-                    url = message.author.avatarURL;
-                }
-                message.channel.sendMessage(url);
-                */
-                message.channel.send({"embed": {
-                    "image": {
-                      "url": person.displayAvatarURL
-                    }
-                }});
-                message.channel.send('UHOHOHOOOHO');
+    let command = message.content;
+
+    if(command === 'ping') message.channel.send('pongogongo');
+
+    if (command[0] === '!') {
+        if(command === commands[0]){
+
+            let person = message.author;
+            /*
+            let url = '';
+            if(message.mentions.members.first()){
+                url = message.mentions.members.first().user.avatarURL;
+            }else{
+                url = message.author.avatarURL;
             }
-            //message.reply('pongg');
+            message.channel.sendMessage(url);
+            */
+            message.channel.send({"embed": {
+                "image": {
+                  "url": person.displayAvatarURL
+                }
+            }});
+            message.channel.send('UHOHOHOOOHO');
         }
-
+        //message.reply('pongg');
     }
+
+    
 });
 
 bot.login(process.env.BOT_TOKEN);
