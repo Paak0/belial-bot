@@ -2,7 +2,7 @@ const Jimp = require('jimp');
 const Discord = require('discord.js');
 const bot = new Discord.Client();
 
-const commands = ['help', 'ping', 'avatar', 'slap'];
+const commands = ['help', 'ping', 'avatar', 'slap', 'ugay'];
 const commandPrefix = '!';
 
 bot.on('ready', () => {
@@ -39,7 +39,7 @@ bot.on('message', message => {
 				
 			case commands[3]:
 				if(!message.mentions.users.first()) return;
-				let bg = 'images/slap.PNG';
+				let bg = 'images/slap.png';
 				let img1 = message.author.displayAvatarURL;
 				let img2 = message.mentions.users.first().displayAvatarURL;
 				let out;
@@ -61,9 +61,13 @@ bot.on('message', message => {
 				});
 				
 				break;
+				
+			case commands[4]:
+				message.channel.send('No, u.');
+				break;
 			
 			default:
-				message.channel.send('Oi, ');
+				message.channel.send('Oi, wanna some sodomy?');
 		}
 		
 		
@@ -71,6 +75,8 @@ bot.on('message', message => {
     
 	}
 });
+
+
 
 
 bot.login(process.env.BOT_TOKEN);
