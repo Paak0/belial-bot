@@ -2,31 +2,57 @@ const Jimp = require('jimp');
 const Discord = require('discord.js');
 const bot = new Discord.Client();
 
-const commands = ['help', 'ping', 'avatar', 'slap', 'ugay'];
 const commandPrefix = '!';
+const commands = ['help', 'random', 'avatar', 'slap'];
+
+const belialWords = ["sodomy", "sex", "anal", "libido", "orgasm", "fuck", "gay"];
+
+const belialMessages = ["UHOHOHOOOHO!", "Mhmmm, do you want to be my koneko-chuan?", "Let me show you my powerfull libido.", 
+						"Saikou no ecstasy!!!", "Gahaha!!! The golden ratio! Yabai, i'll shit myself!!!", "I am all yours.", 
+						"Yaas, pleasure me more.", "I wouldn't mind letting you smash me.", "Let's do some sodomy.", "Perfection 💕",
+						"Ooh, yeah! We're definitely doing this!", "You're getting me all hot and bothered.", 
+						"Our first time ought to be perfect."];
+						
+const noCommandMessages = ["The Archangel of Cumming, Belial.", "Try adding more sodomy.", "Yare yare daze.", "Oi, wanna some sodomy?", "I don't think so.", "How about no?", 
+						   "Have you seen my dog?", "That's not what i was expecting from you."];
+
+let randomNumber;
+
 
 bot.on('ready', () => {
-    console.log('I am ready!');
+    console.log('Belial is ready to serve.');
+});
+
+bot.on('disconnect', () => {
+    console.log('Belial going to rest. Need more libido.');
 });
 
 bot.on('message', message => {
     if(message.author.bot) return;
     
-	if(message.content[0] === commandPrefix){	
-		let command = message.content.split(" ")[0].substring(1);
+	let words = message.content.toLowerCase().split(" ");
+
+	words.filter( function(word){
+		if(belialWords.indexOf(word) != -1){
+			message.react(bot.emojis.find(emoji => emoji.name === "lewd"));
+			return;
+		}
+	});
+	
+	if((words[0])[0] === commandPrefix){	
+		let command = words[0].substring(1);
 		
 		switch(command){
-			case commands[0]:
-				message.channel.send({"embed": {
-					"title": 'Available commands:',
-					"description": '1. help \n 2. ping \n 3. avatar'
-				}});
-				break;
-			case commands[1]:
-				message.channel.send('pongogongo');		//ping
+			case commands[0]://help
+				message.channel.send("```Available commands: \n 1. help \n 2. ping \n 3. avatar \n 4. slap```");
 				break;
 				
-			case commands[2]:
+			case commands[1]://random
+				let nbr = Math.floor(Math.random()*(message.content.split(" ")[1]));
+				message.channel.send("Your number: 	"+nbr);
+				break;
+				
+			case commands[2]://avatar
 				let user = '';
 				message.mentions.users.first() ? user = message.mentions.users.first() : user = message.author;
 				message.channel.send({"embed": {
@@ -34,15 +60,25 @@ bot.on('message', message => {
 					  "url": user.displayAvatarURL
 					}
 				}});
-				message.channel.send('UHOHOHOOOHO');
+				if(user.username === 'Belial') break;
+				if(Math.random() < 0.5){
+					randomNumber = Math.floor( Math.random()*(belialMessages.length) );
+					message.channel.send( 
+						user+" "+belialMessages.find( function(elem, index, self){
+							if(index === randomNumber) return self[index];
+						})
+					);
+				}
 				break;
 				
-			case commands[3]:
-				if(!message.mentions.users.first()) return;
+			case commands[3]://slap
+				if(!message.mentions.users.first()){
+					message.reply(`don't you know who to slap? Maybe you want me to slap you? ${bot.emojis.find(emoji => emoji.name === "yuri")}`);
+					return;
+				}
 				let bg = 'images/slap.png';
 				let img1 = message.author.displayAvatarURL;
 				let img2 = message.mentions.users.first().displayAvatarURL;
-				let out;
 				Jimp.read(img2).then( function(front2){
 					front2.rotate(30);
 					front2.resize(120, 120);
@@ -62,21 +98,30 @@ bot.on('message', message => {
 				
 				break;
 				
-			case commands[4]:
+			case 'ugay':
+			case 'ugai':
+			case 'ugei':
+			case 'ugey':
 				message.channel.send('No, u.');
 				break;
-			
-			default:
-				message.channel.send('Oi, wanna some sodomy?');
+				
+			default: //noCommand
+				randomNumber = Math.floor( Math.random()*(noCommandMessages.length) );
+				message.channel.send( 
+					noCommandMessages.find( function(elem, index, self){
+						if(index === randomNumber) return self[index];
+					})
+				);
 		}
 		
-		
-    //message.reply('pongg');
-    
 	}
 });
 
-
+bot.on('guildMemberAdd', member => {
+  const channel = member.guild.channels.find(ch => ch.name === 'general');
+  if (!channel) return;
+  channel.send(`Welcome to the server, ${member}. \n Have fun with these guys.`);
+});
 
 
 bot.login(process.env.BOT_TOKEN);
