@@ -3,7 +3,7 @@ const Discord = require('discord.js');
 const bot = new Discord.Client();
 
 const commandPrefix = '!';
-const commands = ['help', 'random', 'avatar', 'slap'];
+const commands = ['help', 'random', 'avatar', 'slap', 'join', 'leave'];
 
 const belialWords = ["sodomy", "sex", "anal", "libido", "orgasm"];
 
@@ -103,6 +103,16 @@ bot.on('message', message => {
 			case 'ugei':
 			case 'ugey':
 				message.channel.send('No, u.');
+				break;
+					
+			case commands[4]://join
+				voiceChannel = message.member.voiceChannel;
+				if(voiceChannel) voiceChannel.join();
+				break;
+				
+			case commands[5]://leave
+				voiceChannel = message.member.voiceChannel;
+				if(voiceChannel) voiceChannel.leave();
 				break;
 				
 			default: //noCommand
