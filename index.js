@@ -34,8 +34,7 @@ bot.on('message', message => {
 
 	words.filter( function(word){
 		if(belialWords.indexOf(word) != -1){
-			let emoji = bot.emojis.find(emoji => emoji.name === "lewd");
-			message.react(emoji);
+			message.react(bot.emojis.find(emoji => emoji.name === "lewd"));
 			return;
 		}
 	});
