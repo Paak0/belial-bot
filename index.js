@@ -76,7 +76,7 @@ bot.on('message', message => {
 					message.reply(`don't you know who to slap? Maybe you want me to slap you? ${bot.emojis.find(emoji => emoji.name === "yuri")}`);
 					return;
 				}
-				let bg = 'images/slap.PNG';
+				let bg = 'https://i.imgur.com/r2RnaXr.png';
 				let img1 = message.author.displayAvatarURL;
 				let img2 = message.mentions.users.first().displayAvatarURL;
 				Jimp.read(img2).then( function(front2){
