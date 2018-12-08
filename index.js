@@ -17,7 +17,7 @@ const noCommandMessages = ["The Archangel of Cumming, Belial.", "Try adding more
 						   "Have you seen my dog?", "That's not what i was expecting from you."];
 
 let randomNumber;
-
+let voiceChannel;
 
 bot.on('ready', () => {
     console.log('Belial is ready to serve.');
@@ -76,7 +76,7 @@ bot.on('message', message => {
 					message.reply(`don't you know who to slap? Maybe you want me to slap you? ${bot.emojis.find(emoji => emoji.name === "yuri")}`);
 					return;
 				}
-				let bg = 'https://i.imgur.com/r2RnaXr.png';
+				let bg = 'images/slap.PNG';
 				let img1 = message.author.displayAvatarURL;
 				let img2 = message.mentions.users.first().displayAvatarURL;
 				Jimp.read(img2).then( function(front2){
@@ -104,7 +104,7 @@ bot.on('message', message => {
 			case 'ugey':
 				message.channel.send('No, u.');
 				break;
-					
+				
 			case commands[4]://join
 				voiceChannel = message.member.voiceChannel;
 				if(voiceChannel) voiceChannel.join();
