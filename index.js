@@ -5,7 +5,7 @@ const bot = new Discord.Client();
 const commandPrefix = '!';
 const commands = ['help', 'random', 'avatar', 'slap'];
 
-const belialWords = ["sodomy", "sex", "anal", "libido", "orgasm", "fuck", "gay"];
+const belialWords = ["sodomy", "sex", "anal", "libido", "orgasm"];
 
 const belialMessages = ["UHOHOHOOOHO!", "Mhmmm, do you want to be my koneko-chuan?", "Let me show you my powerfull libido.", 
 						"Saikou no ecstasy!!!", "Gahaha!!! The golden ratio! Yabai, i'll shit myself!!!", "I am all yours.", 
