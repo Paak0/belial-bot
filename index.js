@@ -2,7 +2,7 @@ const Jimp = require('jimp');
 const Discord = require('discord.js');
 const bot = new Discord.Client();
 
-const commandPrefix = '!';
+const commandPrefix = '.';
 const commands = ['help', 'random', 'avatar', 'slap', 'join', 'leave'];
 
 const belialWords = ["sodomy", "sex", "anal", "libido", "orgasm"];
