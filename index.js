@@ -168,9 +168,9 @@ Use me for whatever you want.`
 				
 				let videos = await youtube.searchVideos(searchString, 10);
 				
-				message.channel.send(`\`\`\`
+				message.channel.send(`
 					${videos.map( (vid, index) => `**${++index}. ** ${vid.title}`).join('\n')}
-				\`\`\``);
+				`);
 				
 				let songIndex;
 				
@@ -193,7 +193,7 @@ Use me for whatever you want.`
 				yt.getInfo(url, (err, info) => {
 					if(err) return message.channel.send('Shitty link.');
 					disServ[message.guild.id].songs.push( {url: url, title: info.title, requester: message.author.username} );
-					message.channel.send(`\`\`\`Added: **${info.title}**\`\`\``);
+					message.channel.send(`\`\`\`Added: ${info.title}\`\`\``);
 				});
 				break;
 				
