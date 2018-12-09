@@ -1,24 +1,33 @@
 
-const Jimp = require('jimp');
 const YouTube = require('simple-youtube-api');
 const youtube = new YouTube(process.env.YT_KEY);
+// const youtube = new YouTube(YT_KEY);
+const Jimp = require('jimp');
+
 const yt = require('ytdl-core');
 const Discord = require('discord.js');
 const bot = new Discord.Client();
 
 const commandPrefix = '.';
-const commands = ['help', 'random', 'avatar', 'slap', 'join', 'leave', 'add', 'skip', 'q', 'clear'];
+const commands = [
+	'help', 'random', 'avatar', 'slap', 
+	'join', 'leave', 'add', 'skip', '[ l, list, q, queue ]', '[ c, clear ]'
+];
 
 const belialWords = ["sodomy", "sex", "anal", "libido", "orgasm"];
 
-const belialMessages = ["UHOHOHOOOHO!", "Mhmmm, do you want to be my koneko-chuan?", "Let me show you my powerfull libido.", 
-						"Saikou no ecstasy!!!", "Gahaha!!! The golden ratio! Yabai, i'll shit myself!!!", "I am all yours.", 
-						"Yaas, pleasure me more.", "I wouldn't mind letting you smash me.", "Let's do some sodomy.", "Perfection.",
-						"Oi, wanna some sodomy?", "Ooh, yeah! We're definitely doing this!", "You're getting me all hot and bothered.", 
-						"Our first time ought to be perfect."];
-						
-const noCommandMessages = ["The Archangel of Cumming, Belial.", "Try adding more sodomy.", "Yare yare daze.", "I don't think so.", "How about no?", 
-						   "Have you seen my dog?", "That's not what i was expecting from you."];
+const belialMessages = [
+	"UHOHOHOOOHO!", "Mhmmm, do you want to be my koneko-chuan?", "Let me show you my powerfull libido.", 
+	"Saikou no ecstasy!!!", "Gahaha!!! The golden ratio! Yabai, i'll shit myself!!!", "I am all yours.", 
+	"Yaas, pleasure me more.", "I wouldn't mind letting you smash me.", "Let's do some sodomy.", "Perfection.",
+	"Oi, wanna some sodomy?", "Ooh, yeah! We're definitely doing this!", "You're getting me all hot and bothered.", 
+	"Our first time ought to be perfect."
+];
+
+const otherMessages = [
+	"The Archangel of Cumming, Belial.", "Try adding more sodomy.", "Yare yare daze.", "I don't think so.", "How about no?", 
+	"Have you seen my dog?", "That's not what i was expecting from you."
+];
 
 let disServ = {};
 let mention;
@@ -37,11 +46,11 @@ bot.on('disconnect', () => {
 bot.on('message', async message => {
     if(message.author.bot) return;
     
-	let words = message.content.toLowerCase().split(" ");
+	let words = message.content.toLowerCase().split(' ');
 
 	words.filter( function(word){
 		if(belialWords.indexOf(word) != -1){
-			message.react(bot.emojis.find(emoji => emoji.name === "ppp"));
+			message.react(bot.emojis.find(emoji => emoji.name === 'ppp'));
 			return;
 		}
 	});
@@ -52,7 +61,7 @@ bot.on('message', async message => {
 		
 		switch(command){
 			case 'h':
-			case commands[0]://help
+			case 'help':
 				message.channel.send(`
 **Commands:**
 ${commands.map( (com, index) => `${com}`).join(', ')}
@@ -61,36 +70,36 @@ Use me for whatever you want.`
 				);
 				break;
 				
-			case commands[1]://random
-				randomNumber = Math.floor(Math.random()*(message.content.split(" ")[1]));
-				message.channel.send("Your number: 	"+randomNumber);
+			case 'random':
+				randomNumber = Math.floor(Math.random()*(message.content.split(' ')[1]));
+				message.channel.send('Your number: 	'+randomNumber);
 				break;
 				
-			case commands[2]://avatar
+			case 'avatar':
 				mention = message.mentions.users.first() || message.author || null;
 				if(!mention) break;
 				
-				message.channel.send({"embed": {
-					"image": {
-					  "url": mention.displayAvatarURL
+				message.channel.send({'embed': {
+					'image': {
+					  'url': mention.displayAvatarURL
 					}
 				}});
 				
 				if(mention.username != 'Belial' && Math.random() < 0.5){
 					randomNumber = Math.floor( Math.random()*(belialMessages.length) );
 					message.channel.send( 
-						mention+" "+belialMessages.find( function(elem, index, self){
-							if(index === randomNumber) return self[index];
+						mention+' '+belialMessages.find( (elem, index) => {
+							return index === randomNumber;
 						})
 					);
 				}
 				break;
 				
-			case commands[3]://slap
+			case 'slap':
 				mention = message.mentions.users.first();
 				
 				if(!mention){
-					message.reply(`You just wasted 1 slap. Think about your existance. ${bot.emojis.find(emoji => emoji.name === "kannaangry2")}`);
+					message.reply(`You just wasted 1 slap. Think about your existance. ${bot.emojis.find(emoji => emoji.name === 'kannaangry2')}`);
 					return;
 				}
 				let bg = 'images/slap.PNG';
@@ -107,7 +116,7 @@ Use me for whatever you want.`
 									console.log('Oh no. Error during slap.');
 									return;
 								}
-								message.channel.send({ files: [{ attachment: buffer, name: 'slapped.png'}] }).then( () => {
+								message.channel.send({ files: [{ attachment: buffer, name: 'slapped.png' }] }).then( () => {
 									if(mention.username === 'Belial') message.channel.send(`MY INNER MASOCHISM IS SCREAMING!!!\nUHOOHOHOHOHOHOOOHOOOOO!!!`);
 								});;
 							});
@@ -116,6 +125,10 @@ Use me for whatever you want.`
 				});
 				break;
 				
+			case 'gay':
+			case 'gey':
+			case 'gai':
+			case 'gei':
 			case 'ugay':
 			case 'ugai':
 			case 'ugei':
@@ -123,30 +136,30 @@ Use me for whatever you want.`
 				message.channel.send('No, u.');
 				break;
 				
-			case commands[4]://join
+			case 'join':
 				if (!disServ[message.guild.id] || !disServ[message.guild.id].songs[0]) disServ[message.guild.id] = {}, disServ[message.guild.id].playing = false, disServ[message.guild.id].songs = [];;
 				voiceChannel = message.member.voiceChannel;
 				if(voiceChannel){
 					voiceChannel.join();
 				}else{
-					message.channel.send('Join voice channel first.');
+					message.channel.send('Notto in voice channeru.');
 					return;
 				}
 				break;
 				
-			case commands[5]://leave
+			case 'leave':
 				voiceChannel = message.member.voiceChannel;
 				if(voiceChannel){
 					voiceChannel.leave();
 				}else{
-					message.channel.send('Join voice channel first.');
+					message.channel.send('Notto in voice channeru.');
 					return;
 				}
 				break;
 				
 			case 'add':
 				if(!message.member.voiceChannel){
-					message.channel.send('Oi, you not in voice channel.');
+					message.react('🔇');
 					return;
 				}
 				if(!words[1]) return;
@@ -182,7 +195,6 @@ Use me for whatever you want.`
 					disServ[message.guild.id].songs.push( {url: url, title: info.title, requester: message.author.username} );
 					message.channel.send(`Added: **${info.title}**`);
 				});
-				
 				break;
 				
 			case 'l':
@@ -190,7 +202,7 @@ Use me for whatever you want.`
 			case 'q':
 			case 'queue':
 				if(!message.member.voiceChannel){
-					message.channel.send('Oi, you not in voice channel.');
+					message.react('🔇');
 					return;
 				}
 				if (!disServ[message.guild.id].songs[0]) return message.channel.send(`Nothing.`);
@@ -202,27 +214,22 @@ Use me for whatever you want.`
 			case 'c':
 			case 'clear':
 				if(!message.member.voiceChannel){
-					message.channel.send('Oi, you not in voice channel.');
+					message.react('🔇');
 					return;
 				}
 				let index = words[1] || null;
-				console.log(index);
 				if(index > 0 && index < disServ[message.guild.id].songs.length + 1){
-					disServ[message.guild.id].songs.filter( (elem, i) => {
-						return (i === (index - 1));
-					});
-					// disServ[message.guild.id].songs.filter( function(word){
-						// if(belialWords.indexOf(word) === index - 1) return;
-					// });
+					let title = disServ[message.guild.id].songs.splice(index - 1, 1).title;
+					message.channel.send(`Song: ${title} deleted.`);
 				}else{
 					disServ[message.guild.id].songs = [];
-					message.channel.send('List cleared.');
+					message.channel.send(`List cleared.`);
 				}
 				break;
 				
 			case 'play':
 				if(!message.member.voiceChannel){
-					message.channel.send('Oi, you not in voice channel.');
+					message.react('🔇');
 					return;
 				}
 				if (!disServ[message.guild.id].songs[0]) return message.channel.send('Nothing to play.');
@@ -234,7 +241,7 @@ Use me for whatever you want.`
 					if (song === undefined) return message.channel.send('Nothing to play.').then(() => {
 						disServ[message.guild.id].playing = false;
 					});
-					message.channel.send(`Playing: **${song.title}** as requested by: **${song.requester}**`);
+					message.channel.send(`Playing: **${song.title}**`);
 					
 					dispatcher = message.guild.voiceConnection.playStream(yt(song.url, { audioonly: true }), { passes : 1 });
 					dispatcher.on('end', () => {
@@ -246,27 +253,27 @@ Use me for whatever you want.`
 						});
 					});
 				})(disServ[message.guild.id].songs.shift());
-
 				break;
 				
 			case 'skip':
 				if(!message.member.voiceChannel){
-					message.channel.send('Oi, you not in voice channel.');
+					message.react('🔇');
 					return;
 				}
 				dispatcher.end();
 				break;
 				
 			default: //noCommand
-				randomNumber = Math.floor( Math.random()*(noCommandMessages.length) );
-				message.channel.send( 
-					`There is no such command.`
+				message.react('⛔');
+				// message.react(`$(bot.emojis.find(emoji => emoji.name === 'no_entry'))`);
+				//randomNumber = Math.floor( Math.random()*(noCommandMessages.length) );
+				// message.channel.send( 
+					// `There is no such command.`
 					// noCommandMessages.find( function(elem, index, self){
 						// if(index === randomNumber) return self[index];
 					// })
-				);
+				// );
 		}
-		
 	}
 });
 
@@ -278,3 +285,4 @@ bot.on('guildMemberAdd', member => {
 
 
 bot.login(process.env.BOT_TOKEN);
+// bot.login(BOT_TOKEN);
