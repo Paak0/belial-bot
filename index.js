@@ -34,6 +34,7 @@ let mention;
 let randomNumber;
 let voiceChannel;
 let dispatcher;
+let currentlyPlayed;
 
 bot.on('ready', () => {
     console.log('Belial is ready to serve.');
@@ -238,14 +239,16 @@ Use me for whatever you want.`
 				disServ[message.guild.id].playing = true;
 				
 				(function play(song) {
-					if (song === undefined){
+					if (!song){
 						disServ[message.guild.id].playing = false;
-						return message.channel.send('Nothing to play.');
+						message.guild.voiceConnection.disconnect();
+						return;
 					}
+					currentlyPlayed = song.title;
 					
 					dispatcher = message.guild.voiceConnection.playStream(yt(song.url, { audioonly: true }), { passes : 1 });
 					dispatcher.on('end', () => {
-						if(disServ[message.guild.id].songs[0]) play(disServ[message.guild.id].songs.shift());
+						play(disServ[message.guild.id].songs.shift());
 					});
 					dispatcher.on('error', () => {
 						return message.channel.sendMessage('Shit happened.').then(() => {
@@ -253,6 +256,10 @@ Use me for whatever you want.`
 						});
 					});
 				})(disServ[message.guild.id].songs.shift());
+				break;
+				
+			case 'np':
+				if(disServ[message.guild.id].playing) message.channel.sendMessage('Playing: '+currentlyPlayed);
 				break;
 				
 			case 'skip':
