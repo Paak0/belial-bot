@@ -235,13 +235,13 @@ Use me for whatever you want.`
 				}
 				if (!disServ[message.guild.id].songs[0]) return message.channel.send('Nothing to play.');
 				if (disServ[message.guild.id].playing) return message.channel.send("I'm already playing!!!");
-				dispatcher = {};
+				
 				disServ[message.guild.id].playing = true;
 				
 				(function play(song) {
+					dispatcher = {};
 					if (!song){
 						disServ[message.guild.id].playing = false;
-						message.guild.voiceConnection.disconnect();
 						return;
 					}
 					currentlyPlayed = song.title;
@@ -259,7 +259,7 @@ Use me for whatever you want.`
 				break;
 				
 			case 'np':
-				if(disServ[message.guild.id].playing) message.channel.sendMessage('Playing: '+currentlyPlayed);
+				if(disServ[message.guild.id].playing) message.channel.send(`\`\`\`Playing: $(currentlyPlayed)\`\`\``);
 				break;
 				
 			case 'skip':
