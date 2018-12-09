@@ -1,4 +1,8 @@
+
 const Jimp = require('jimp');
+const YouTube = require('simple-youtube-api');
+const youtube = new YouTube(YT_KEY);
+const yt = require('ytdl-core');
 const Discord = require('discord.js');
 const bot = new Discord.Client();
 
@@ -16,8 +20,10 @@ const belialMessages = ["UHOHOHOOOHO!", "Mhmmm, do you want to be my koneko-chua
 const noCommandMessages = ["The Archangel of Cumming, Belial.", "Try adding more sodomy.", "Yare yare daze.", "Oi, wanna some sodomy?", "I don't think so.", "How about no?", 
 						   "Have you seen my dog?", "That's not what i was expecting from you."];
 
+let disServ = {};
 let randomNumber;
 let voiceChannel;
+let dispatcher;
 
 bot.on('ready', () => {
     console.log('Belial is ready to serve.');
@@ -27,7 +33,7 @@ bot.on('disconnect', () => {
     console.log('Belial going to rest. Need more libido.');
 });
 
-bot.on('message', message => {
+bot.on('message', async message => {
     if(message.author.bot) return;
     
 	let words = message.content.toLowerCase().split(" ");
@@ -44,7 +50,12 @@ bot.on('message', message => {
 		
 		switch(command){
 			case commands[0]://help
-				message.channel.send("```Available commands: \n 1. help \n 2. ping \n 3. avatar \n 4. slap```");
+				message.channel.send(
+				`Available commands: 
+				1. help
+				2. ping
+				3. avatar 
+				4. slap`);
 				break;
 				
 			case commands[1]://random
@@ -106,6 +117,7 @@ bot.on('message', message => {
 				break;
 				
 			case commands[4]://join
+				if (!disServ[message.guild.id] || !disServ[message.guild.id].songs[0]) disServ[message.guild.id] = {}, disServ[message.guild.id].playing = false, disServ[message.guild.id].songs = [];;
 				voiceChannel = message.member.voiceChannel;
 				if(voiceChannel) voiceChannel.join();
 				break;
@@ -113,6 +125,83 @@ bot.on('message', message => {
 			case commands[5]://leave
 				voiceChannel = message.member.voiceChannel;
 				if(voiceChannel) voiceChannel.leave();
+				break;
+				
+			case 'add':
+				if(!words[1]) return;
+				let searchString = words.slice(1).join(' ');
+				let msgAuthor = message.author.username;
+				
+				let videos = await youtube.searchVideos(searchString, 10);
+				
+				message.channel.send(`
+					${videos.map( (vid, index) => `**${++index} -** ${vid.title}`).join('\n')}
+					Select one of the search results (1-10).
+				`);
+				
+				let songIndex;
+				
+				await message.channel.awaitMessages(msg => msg.content > 0, {
+					max: 1,
+					time: 15000,
+					errors: ['time'],
+				})
+				.then((collected) => {
+					songIndex = collected.first().content;
+				})
+				.catch(() => {
+					message.channel.send('Too late.');
+					return;
+				});
+				
+				let url = videos[songIndex - 1].url;
+				
+				yt.getInfo(url, (err, info) => {
+					if(err) return message.channel.send('Shitty link.');
+					disServ[message.guild.id].songs.push( {url: url, title: info.title, requester: message.author.username} );
+					message.channel.send(`Added: **${info.title}**`);
+				});
+				
+				break;
+				
+			case 'queue':
+				if (!disServ[message.guild.id].songs[0]) return message.channel.send('Queue empty.');
+				let tosend = [];
+				disServ[message.guild.id].songs.forEach((song, i) => { tosend.push(`${i+1}. ${song.title} - Requested by: ${song.requester}`);});
+				message.channel.send(`__**Music Queue:**__ Currently **${tosend.length}** songs queued ${(tosend.length > 15 ? '*[Only next 15 shown]*' : '')}\n\`\`\`${tosend.slice(0,15).join('\n')}\`\`\``);
+				break;
+				
+			case 'clear':
+				disServ[message.guild.id].songs = [];
+				message.channel.send('Queue cleared.');
+				break;
+				
+			case 'play':
+				if (!disServ[message.guild.id].songs[0]) return message.channel.send('Queue empty.');
+				if (disServ[message.guild.id].playing) return message.channel.send("I'm already playing!!!");
+				dispatcher = {};
+				disServ[message.guild.id].playing = true;
+				
+				(function play(song) {
+					if (song === undefined) return message.channel.send('Queue is empty').then(() => {
+						disServ[message.guild.id].playing = false;
+					});
+					message.channel.send(`Playing: **${song.title}** as requested by: **${song.requester}**`);
+					dispatcher = message.guild.voiceConnection.playStream(yt(song.url, { audioonly: true }), { passes : 1 });
+					dispatcher.on('end', () => {
+						play(disServ[message.guild.id].songs.shift());
+					});
+					dispatcher.on('error', () => {
+						return message.channel.sendMessage('Shit happened.').then(() => {
+							play(disServ[message.guild.id].songs.shift());
+						});
+					});
+				})(disServ[message.guild.id].songs.shift());
+
+				break;
+				
+			case 'skip':
+				dispatcher.end();
 				break;
 				
 			default: //noCommand
@@ -134,4 +223,4 @@ bot.on('guildMemberAdd', member => {
 });
 
 
-bot.login(process.env.BOT_TOKEN);
+bot.login(BOT_TOKEN);
