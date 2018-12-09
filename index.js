@@ -168,9 +168,9 @@ Use me for whatever you want.`
 				
 				let videos = await youtube.searchVideos(searchString, 10);
 				
-				message.channel.send(`
-					${videos.map( (vid, index) => `**${++index} -** ${vid.title}`).join('\n')}
-				`);
+				message.channel.send(`\`\`\`
+					${videos.map( (vid, index) => `**${++index}. ** ${vid.title}`).join('\n')}
+				\`\`\``);
 				
 				let songIndex;
 				
@@ -193,7 +193,7 @@ Use me for whatever you want.`
 				yt.getInfo(url, (err, info) => {
 					if(err) return message.channel.send('Shitty link.');
 					disServ[message.guild.id].songs.push( {url: url, title: info.title, requester: message.author.username} );
-					message.channel.send(`Added: **${info.title}**`);
+					message.channel.send(\`\`\``Added: **${info.title}**`\`\`\`);
 				});
 				break;
 				
@@ -238,14 +238,14 @@ Use me for whatever you want.`
 				disServ[message.guild.id].playing = true;
 				
 				(function play(song) {
-					if (song === undefined) return message.channel.send('Nothing to play.').then(() => {
+					if (song === undefined){
 						disServ[message.guild.id].playing = false;
-					});
-					message.channel.send(`Playing: **${song.title}**`);
+						return message.channel.send('Nothing to play.');
+					}
 					
 					dispatcher = message.guild.voiceConnection.playStream(yt(song.url, { audioonly: true }), { passes : 1 });
 					dispatcher.on('end', () => {
-						play(disServ[message.guild.id].songs.shift());
+						if(disServ[message.guild.id].songs[0]) play(disServ[message.guild.id].songs.shift());
 					});
 					dispatcher.on('error', () => {
 						return message.channel.sendMessage('Shit happened.').then(() => {
