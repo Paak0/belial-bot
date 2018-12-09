@@ -1,7 +1,7 @@
 
 const Jimp = require('jimp');
 const YouTube = require('simple-youtube-api');
-const youtube = new YouTube(YT_KEY);
+const youtube = new YouTube(process.env.YT_KEY);
 const yt = require('ytdl-core');
 const Discord = require('discord.js');
 const bot = new Discord.Client();
