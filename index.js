@@ -10,7 +10,7 @@ const bot = new Discord.Client();
 
 const commandPrefix = '.';
 const commands = [
-	'help', 'random', 'avatar', 'slap', 
+	'help', 'random', 'info', 'avatar', 'slap', 
 	'join', 'leave', 'add', 'skip', '[ l, list, q, queue ]', '[ c, clear ]'
 ];
 
@@ -217,6 +217,8 @@ Use me for whatever you want.`
 				});
 				if(!songIndex) break;
 				
+				if(videos[songIndex - 1].durationSeconds > 420) return message.channel.send('Video too long.');
+				
 				let url = videos[songIndex - 1].url;
 				
 				yt.getInfo(url, (err, info) => {
@@ -273,8 +275,7 @@ Use me for whatever you want.`
 						return;
 					}
 					currentlyPlayed = song.title;
-					
-					dispatcher = message.guild.voiceConnection.playStream(yt(song.url, { audioonly: true }), { passes : 1 });
+					dispatcher = message.guild.voiceConnection.playStream(yt(song.url, { filter: 'audioonly' , quality: 'lowest' }), { passes : 1 });
 					dispatcher.on('end', () => {
 						play(disServ[message.guild.id].songs.shift());
 					});
