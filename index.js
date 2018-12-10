@@ -288,7 +288,7 @@ Use me for whatever you want.`
 				break;
 				
 			case 'np':
-				if(disServ[message.guild.id].playing) message.channel.send(`\`\`\`Playing: $(currentlyPlayed)\`\`\``);
+				if(disServ[message.guild.id].playing) message.channel.send(`\`\`\`Playing: ${currentlyPlayed}\`\`\``);
 				break;
 				
 			case 'skip':
