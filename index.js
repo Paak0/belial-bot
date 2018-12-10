@@ -156,11 +156,11 @@ Use me for whatever you want.`
 						{	"name": "Nickname",
 							"value": mbr.nickname},
 						{	"name": "Account created",
-							"value": "user created"},
-						{	"name": mbr.user.createdAt,
-							"value": "user join date"},
+							"value": mbr.user.createdAt.toDateString()},
+						{	"name": "Joined guild",
+							"value": mbr.guild.joinedAt.toDateString()},
 						{	"name": "Roles",
-							"value": mbr.guild.joinedAt}
+							"value": "blahblahblah"}
 					]
 				}});
 				break;
