@@ -158,7 +158,7 @@ Use me for whatever you want.`
 						{	"name": "Account created",
 							"value": mbr.user.createdAt.toDateString()},
 						{	"name": "Joined guild",
-							"value": mbr.guild.joinedAt.toDateString()},
+							"value": mbr.joinedAt.toDateString()},
 						{	"name": "Roles",
 							"value": "blahblahblah"}
 					]
