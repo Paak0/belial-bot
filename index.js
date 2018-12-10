@@ -30,6 +30,7 @@ const otherMessages = [
 ];
 
 let disServ = {};
+let user;
 let mention;
 let randomNumber;
 let voiceChannel;
@@ -77,19 +78,18 @@ Use me for whatever you want.`
 				break;
 				
 			case 'avatar':
-				mention = message.mentions.users.first() || message.author || null;
-				if(!mention) break;
+				user = message.mentions.users.first() || message.author;
 				
 				message.channel.send({'embed': {
 					'image': {
-					  'url': mention.displayAvatarURL
+					  'url': user.displayAvatarURL
 					}
 				}});
 				
-				if(mention.username != 'Belial' && Math.random() < 0.5){
+				if(user.username != 'Belial' && Math.random() < 0.5){
 					randomNumber = Math.floor( Math.random()*(belialMessages.length) );
 					message.channel.send( 
-						mention+' '+belialMessages.find( (elem, index) => {
+						user+' '+belialMessages.find( (elem, index) => {
 							return index === randomNumber;
 						})
 					);
@@ -135,6 +135,34 @@ Use me for whatever you want.`
 			case 'ugei':
 			case 'ugey':
 				message.channel.send('No, u.');
+				break;
+				
+			case 'info':
+				mbr = message.mentions.members.first() || message.member;
+				
+				message.channel.send({"embed": {
+					"color": mbr.displayColor,
+					"thumbnail": {
+					  "url": mbr.user.displayAvatarURL
+					},
+					"author": {
+					  "name": mbr.user.username
+					},
+					"fields": [
+						{	"name": "ID",
+							"value": mbr.user.id},
+						{	"name": "Status",
+							"value": mbr.user.presence.status},
+						{	"name": "Nickname",
+							"value": mbr.nickname},
+						{	"name": "Account created",
+							"value": "user created"},
+						{	"name": mbr.user.createdAt,
+							"value": "user join date"},
+						{	"name": "Roles",
+							"value": mbr.guild.joinedAt}
+					]
+				}});
 				break;
 				
 			case 'join':
