@@ -276,7 +276,7 @@ Use me for whatever you want.`
 					}
 					currentlyPlayed = song.title;
 					
-					dispatcher = message.guild.voiceConnection.playStream(yt(song.url, { filter: 'audioonly' }), { seek: 0, passes: 2 });
+					dispatcher = message.guild.voiceConnection.playStream(yt(song.url, { filter: 'audioonly' }), { seek: 1, passes: 4 });
 					dispatcher.on('end', () => {
 						play(disServ[message.guild.id].songs.shift());
 					});
