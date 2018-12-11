@@ -209,6 +209,7 @@ Use me for whatever you want.`
 					errors: ['time'],
 				})
 				.then((collected) => {
+					if(!collected) return;
 					songIndex = collected.first().content;
 				})
 				.catch(() => {
