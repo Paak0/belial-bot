@@ -1,35 +1,27 @@
+const BOT_TOKEN = 'NTIwMDA1MDQ4NjUwOTU2ODIx.DunlYw.ksJNHK2DbkAJjz9Adoy4SrUXNno';
+const YT_KEY = 'AIzaSyDdfW62XfmScmaxaKlMpVeextra-HmxR68';
+
+const request = require('superagent');
 
 const YouTube = require('simple-youtube-api');
-const youtube = new YouTube(process.env.YT_KEY);
-// const youtube = new YouTube(YT_KEY);
-const Jimp = require('jimp');
-
+// const youtube = new YouTube(process.env.YT_KEY);
+const youtube = new YouTube(YT_KEY);
 const yt = require('ytdl-core');
+
 const Discord = require('discord.js');
 const bot = new Discord.Client();
 
+const commands = require('./src/commands.js');
+
 const commandPrefix = '.';
-const commands = [
+const commandsNames = [
 	'help', 'random', 'info', 'avatar', 'slap', 
 	'join', 'leave', 'add', 'skip', '[ l, list, q, queue ]', '[ c, clear ]'
 ];
 
-const belialWords = ["sodomy", "sex", "anal", "libido", "orgasm"];
+const belialWords = require('./src/belial.js').words;
 
-const belialMessages = [
-	"UHOHOHOOOHO!", "Mhmmm, do you want to be my koneko-chuan?", "Let me show you my powerfull libido.", 
-	"Saikou no ecstasy!!!", "Gahaha!!! The golden ratio! Yabai, i'll shit myself!!!", "I am all yours.", 
-	"Yaas, pleasure me more.", "I wouldn't mind letting you smash me.", "Let's do some sodomy.", "Perfection.",
-	"Oi, wanna some sodomy?", "Ooh, yeah! We're definitely doing this!", "You're getting me all hot and bothered.", 
-	"Our first time ought to be perfect."
-];
-
-const otherMessages = [
-	"The Archangel of Cumming, Belial.", "Try adding more sodomy.", "Yare yare daze.", "I don't think so.", "How about no?", 
-	"Have you seen my dog?", "That's not what i was expecting from you."
-];
-
-let disServ = {};
+let servers = {};
 let user;
 let mention;
 let randomNumber;
@@ -38,11 +30,22 @@ let dispatcher;
 let currentlyPlayed;
 
 bot.on('ready', () => {
+	bot.guilds.map( guild => { 
+		servers[guild.id] = {
+			name: guild.name,
+			playing: false,
+			songs: []
+		}
+	});
     console.log('Belial is ready to serve.');
 });
 
 bot.on('disconnect', () => {
     console.log('Belial going to rest. Need more libido.');
+});
+
+bot.on('reconnecting', () => {
+    console.log('Reconnecting.');
 });
 
 bot.on('message', async message => {
@@ -66,64 +69,19 @@ bot.on('message', async message => {
 			case 'help':
 				message.channel.send(`
 **Commands:**
-${commands.map( (com, index) => `${com}`).join(', ')}
+${commandsNames.map( (com, index) => `${com}`).join(', ')}
 
 Use me for whatever you want.`
 				);
 				break;
 				
-			case 'random':
-				randomNumber = Math.floor(Math.random()*(message.content.split(' ')[1]));
-				message.channel.send('Your number: 	'+randomNumber);
+			case 'random': commands.random.dothis(message);
 				break;
 				
-			case 'avatar':
-				user = message.mentions.users.first() || message.author;
-				
-				message.channel.send({'embed': {
-					'image': {
-					  'url': user.displayAvatarURL
-					}
-				}});
-				
-				if(user.username != 'Belial' && Math.random() < 0.5){
-					randomNumber = Math.floor( Math.random()*(belialMessages.length) );
-					message.channel.send( 
-						user+' '+belialMessages.find( (elem, index) => {
-							return index === randomNumber;
-						})
-					);
-				}
+			case 'avatar': commands.avatar.dothis(message);
 				break;
 				
-			case 'slap':
-				mention = message.mentions.users.first();
-				
-				if(!mention){
-					message.reply(`You just wasted 1 slap. Think about your existance. ${bot.emojis.find(emoji => emoji.name === 'kannaangry2')}`);
-					return;
-				}
-				let bg = 'images/slap.PNG';
-				let img1 = message.author.displayAvatarURL;
-				let img2 = mention.displayAvatarURL;
-				Jimp.read(img2).then( function(front2){
-					front2.rotate(30);
-					front2.resize(120, 120);
-					Jimp.read(img1).then( function(front1){
-						front1.resize(100, 100);
-						Jimp.read(bg).then( function(back){
-							back.composite(front2, 60, 280).composite(front1, 220, 140).getBuffer(Jimp.MIME_PNG, (err, buffer) => {
-								if(err){
-									console.log('Oh no. Error during slap.');
-									return;
-								}
-								message.channel.send({ files: [{ attachment: buffer, name: 'slapped.png' }] }).then( () => {
-									if(mention.username === 'Belial') message.channel.send(`MY INNER MASOCHISM IS SCREAMING!!!\nUHOOHOHOHOHOHOOOHOOOOO!!!`);
-								});;
-							});
-						});
-					});
-				});
+			case 'slap': commands.slap.dothis(message);
 				break;
 				
 			case 'gay':
@@ -137,60 +95,26 @@ Use me for whatever you want.`
 				message.channel.send('No, u.');
 				break;
 				
-			case 'info':
-				mbr = message.mentions.members.first() || message.member;
-				
-				message.channel.send({"embed": {
-					"color": mbr.displayColor,
-					"thumbnail": {
-					  "url": mbr.user.displayAvatarURL
-					},
-					"author": {
-					  "name": mbr.user.username
-					},
-					"fields": [
-						{	"name": "ID",
-							"value": mbr.user.id},
-						{	"name": "Status",
-							"value": mbr.user.presence.status},
-						{	"name": "Nickname",
-							"value": mbr.nickname},
-						{	"name": "Account created",
-							"value": mbr.user.createdAt.toDateString()},
-						{	"name": "Joined guild",
-							"value": mbr.joinedAt.toDateString()},
-						{	"name": "Roles",
-							"value": "blahblahblah"}
-					]
-				}});
+			case 'info': commands.info.dothis(message);
 				break;
 				
 			case 'join':
-				if (!disServ[message.guild.id] || !disServ[message.guild.id].songs[0]) disServ[message.guild.id] = {}, disServ[message.guild.id].playing = false, disServ[message.guild.id].songs = [];;
-				voiceChannel = message.member.voiceChannel;
-				if(voiceChannel){
-					voiceChannel.join();
-				}else{
-					message.channel.send('Notto in voice channeru.');
-					return;
-				}
+				commands.join.dothis(message, servers);
+				// if (!disServ[message.guild.id] || !disServ[message.guild.id].songs[0]) disServ[message.guild.id] = {}, disServ[message.guild.id].playing = false, disServ[message.guild.id].songs = [];;
+				// voiceChannel = message.member.voiceChannel;
+				// if(voiceChannel) voiceChannel.join();
+				// else message.channel.send(message.guild.id);
 				break;
 				
 			case 'leave':
-				voiceChannel = message.member.voiceChannel;
-				if(voiceChannel){
-					voiceChannel.leave();
-				}else{
-					message.channel.send('Notto in voice channeru.');
-					return;
-				}
+				commands.leave.dothis(message);
+				// voiceChannel = message.member.voiceChannel;
+				// if(voiceChannel) voiceChannel.leave();
+				// else message.channel.send('Notto in voice channeru.');
 				break;
 				
 			case 'add':
-				if(!message.member.voiceChannel){
-					message.react('🔇');
-					return;
-				}
+				if(!message.member.voiceChannel) return message.react('🔇');
 				if(!words[1]) return;
 				let searchString = words.slice(1).join(' ');
 				let msgAuthor = message.author.username;
@@ -199,7 +123,10 @@ Use me for whatever you want.`
 				
 				message.channel.send(`
 					${videos.map( (vid, index) => `**${++index}. ** ${vid.title}`).join('\n')}
-				`);
+				`).catch( err => {
+					console.log(err);
+					return message.channel.send('Not my bad. Youtube dumb.');
+				});
 				
 				let songIndex;
 				
@@ -213,7 +140,7 @@ Use me for whatever you want.`
 					songIndex = collected.first().content;
 				})
 				.catch(() => {
-					message.channel.send('Too late.');
+					message.channel.send('No correct song picked.');
 					return;
 				});
 				if(!songIndex) break;
@@ -289,8 +216,7 @@ Use me for whatever you want.`
 				})(disServ[message.guild.id].songs.shift());
 				break;
 				
-			case 'np':
-				if(disServ[message.guild.id].playing) message.channel.send(`\`\`\`Playing: ${currentlyPlayed}\`\`\``);
+			case 'np': if(disServ[message.guild.id].playing) message.channel.send(`\`\`\`Playing: ${currentlyPlayed}\`\`\``);
 				break;
 				
 			case 'skip':
@@ -301,16 +227,16 @@ Use me for whatever you want.`
 				dispatcher.end();
 				break;
 				
-			default: //noCommand
-				message.react('⛔');
-				// message.react(`$(bot.emojis.find(emoji => emoji.name === 'no_entry'))`);
-				//randomNumber = Math.floor( Math.random()*(noCommandMessages.length) );
-				// message.channel.send( 
-					// `There is no such command.`
-					// noCommandMessages.find( function(elem, index, self){
-						// if(index === randomNumber) return self[index];
-					// })
-				// );
+			case 'yomomma': commands.yomomma.dothis(message);
+				break;
+				
+			case 'wisdom': commands.wisdom.dothis(message);
+				break;
+				
+			case 'trump': commands.trump.dothis(message);
+				break;
+				
+			default: message.react('⛔');
 		}
 	}
 });
@@ -322,5 +248,5 @@ bot.on('guildMemberAdd', member => {
 });
 
 
-bot.login(process.env.BOT_TOKEN);
-// bot.login(BOT_TOKEN);
+// bot.login(process.env.BOT_TOKEN);
+bot.login(BOT_TOKEN);
