@@ -151,7 +151,7 @@ Use me for whatever you want.`
 				
 				yt.getInfo(url, (err, info) => {
 					if(err) return message.channel.send('Shitty link.');
-					disServ[message.guild.id].songs.push( {url: url, title: info.title, requester: message.author.username} );
+					servers[message.guild.id].songs.push( {url: url, title: info.title, requester: message.author.username} );
 					message.channel.send(`\`\`\`Added: ${info.title}\`\`\``);
 				});
 				break;
@@ -164,9 +164,9 @@ Use me for whatever you want.`
 					message.react('🔇');
 					return;
 				}
-				if (!disServ[message.guild.id].songs[0]) return message.channel.send(`Nothing.`);
+				if (!servers[message.guild.id].songs[0]) return message.channel.send(`Nothing.`);
 				let tosend = [];
-				disServ[message.guild.id].songs.forEach((song, i) => { tosend.push(`${i+1}. ${song.title} - Requested by: ${song.requester}`);});
+				servers[message.guild.id].songs.forEach((song, i) => { tosend.push(`${i+1}. ${song.title} - Requested by: ${song.requester}`);});
 				message.channel.send(`__**Music Queue:**__ Currently **${tosend.length}** songs queued ${(tosend.length > 15 ? '*[Only next 15 shown]*' : '')}\n\`\`\`${tosend.slice(0,15).join('\n')}\`\`\``);
 				break;
 				
@@ -177,11 +177,11 @@ Use me for whatever you want.`
 					return;
 				}
 				let index = words[1] || null;
-				if(index > 0 && index < disServ[message.guild.id].songs.length + 1){
-					let title = disServ[message.guild.id].songs.splice(index - 1, 1).title;
+				if(index > 0 && index < servers[message.guild.id].songs.length + 1){
+					let title = servers[message.guild.id].songs.splice(index - 1, 1).title;
 					message.channel.send(`Song: ${title} deleted.`);
 				}else{
-					disServ[message.guild.id].songs = [];
+					servers[message.guild.id].songs = [];
 					message.channel.send(`List cleared.`);
 				}
 				break;
@@ -191,32 +191,32 @@ Use me for whatever you want.`
 					message.react('🔇');
 					return;
 				}
-				if (!disServ[message.guild.id].songs[0]) return message.channel.send('Nothing to play.');
-				if (disServ[message.guild.id].playing) return message.channel.send("I'm already playing!!!");
+				if (!servers[message.guild.id].songs[0]) return message.channel.send('Nothing to play.');
+				if (servers[message.guild.id].playing) return message.channel.send("I'm already playing!!!");
 				
-				disServ[message.guild.id].playing = true;
+				servers[message.guild.id].playing = true;
 				
 				(function play(song) {
 					dispatcher = {};
 					if (!song){
-						disServ[message.guild.id].playing = false;
+						servers[message.guild.id].playing = false;
 						return;
 					}
 					currentlyPlayed = song.title;
 					
 					dispatcher = message.guild.voiceConnection.playStream(yt(song.url, { filter: 'audioonly' }), { seek: 1, passes: 4 });
 					dispatcher.on('end', () => {
-						play(disServ[message.guild.id].songs.shift());
+						play(servers[message.guild.id].songs.shift());
 					});
 					dispatcher.on('error', () => {
 						return message.channel.sendMessage('Shit happened.').then(() => {
-							play(disServ[message.guild.id].songs.shift());
+							play(servers[message.guild.id].songs.shift());
 						});
 					});
-				})(disServ[message.guild.id].songs.shift());
+				})(servers[message.guild.id].songs.shift());
 				break;
 				
-			case 'np': if(disServ[message.guild.id].playing) message.channel.send(`\`\`\`Playing: ${currentlyPlayed}\`\`\``);
+			case 'np': if(servers[message.guild.id].playing) message.channel.send(`\`\`\`Playing: ${currentlyPlayed}\`\`\``);
 				break;
 				
 			case 'skip':
@@ -239,6 +239,21 @@ Use me for whatever you want.`
 			default: message.react('⛔');
 		}
 	}
+});
+
+
+bot.on('messageReactionAdd', () => {
+	try{
+		if(message.author.username == 'Paako' && message.attachments.first().url ) {
+			message.react( "\u0031\u20E3" );
+			const filter = (reaction, user) => reaction.emoji.name === "\u0031\u20E3" && !user.bot;
+			const collector = message.createReactionCollector(filter);
+			collector.on('collect', () => {
+				message.channel.send(message.attachments.first().url);
+				collector.stop();
+			});
+		}
+	}catch(err){ console.log(err); }
 });
 
 bot.on('guildMemberAdd', member => {
