@@ -1,11 +1,9 @@
-const BOT_TOKEN = 'NTIwMDA1MDQ4NjUwOTU2ODIx.DunlYw.ksJNHK2DbkAJjz9Adoy4SrUXNno';
-const YT_KEY = 'AIzaSyDdfW62XfmScmaxaKlMpVeextra-HmxR68';
 
 const request = require('superagent');
 
 const YouTube = require('simple-youtube-api');
-// const youtube = new YouTube(process.env.YT_KEY);
-const youtube = new YouTube(YT_KEY);
+const youtube = new YouTube(process.env.YT_KEY);
+
 const yt = require('ytdl-core');
 
 const Discord = require('discord.js');
@@ -263,5 +261,4 @@ bot.on('guildMemberAdd', member => {
 });
 
 
-// bot.login(process.env.BOT_TOKEN);
-bot.login(BOT_TOKEN);
+bot.login(process.env.BOT_TOKEN);
