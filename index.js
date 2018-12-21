@@ -1,17 +1,12 @@
 
+
 const request = require('superagent');
-
-const YouTube = require('simple-youtube-api');
-const youtube = new YouTube(process.env.YT_KEY);
-
-const yt = require('ytdl-core');
-
 const Discord = require('discord.js');
 const bot = new Discord.Client();
 
 const commands = require('./src/commands.js');
-
 const commandPrefix = '.';
+
 const commandsNames = [
 	'help', 'random', 'info', 'avatar', 'slap', 
 	'join', 'leave', 'add', 'skip', '[ l, list, q, queue ]', '[ c, clear ]'
@@ -27,12 +22,21 @@ let voiceChannel;
 let dispatcher;
 let currentlyPlayed;
 
+let soundNames = ['them', 'us', 'ability_them', 'ability_us', 'mypage', 'cutin', 
+				  'win', 'lose', 'attack', 'kill', 'ready', 'mortal', 'damage', 
+				  'dying', 'zenith_up', 'runk_up', 'introduce', 'evolution', 'formation', 
+				  'archive', 'to_player', 'healed', 'hp_down', 'power_down'];
+let adds = ['', 'a', 'b', '_a', '_b', '_mix'];
+let sounds = [];
+
+
 bot.on('ready', () => {
 	bot.guilds.map( guild => { 
-		servers[guild.id] = {
+		if(!servers[guild.id]) servers[guild.id] = {
 			name: guild.name,
 			playing: false,
-			songs: []
+			songs: [],
+			currentVoiceChannel: null
 		}
 	});
     console.log('Belial is ready to serve.');
@@ -57,6 +61,10 @@ bot.on('message', async message => {
 			return;
 		}
 	});
+	
+	try{
+		if(message.attachments.first() && message.attachments.first().url || message.embeds[0] && message.embeds[0].image) message.react( "\u0031\u20E3" );
+	}catch(e){ return console.log(e); }
 	
 	if((words[0])[0] === commandPrefix){
 		if(words[0][1].includes('.')) return;
@@ -97,7 +105,7 @@ Use me for whatever you want.`
 				break;
 				
 			case 'join':
-				commands.join.dothis(message, servers);
+				commands.join.dothis(message, servers[message.guild.id]);
 				// if (!disServ[message.guild.id] || !disServ[message.guild.id].songs[0]) disServ[message.guild.id] = {}, disServ[message.guild.id].playing = false, disServ[message.guild.id].songs = [];;
 				// voiceChannel = message.member.voiceChannel;
 				// if(voiceChannel) voiceChannel.join();
@@ -105,53 +113,54 @@ Use me for whatever you want.`
 				break;
 				
 			case 'leave':
-				commands.leave.dothis(message);
+				commands.leave.dothis(message, servers[message.guild.id]);
 				// voiceChannel = message.member.voiceChannel;
 				// if(voiceChannel) voiceChannel.leave();
 				// else message.channel.send('Notto in voice channeru.');
 				break;
 				
 			case 'add':
-				if(!message.member.voiceChannel) return message.react('🔇');
-				if(!words[1]) return;
-				let searchString = words.slice(1).join(' ');
-				let msgAuthor = message.author.username;
+				commands.add.dothis(message, servers[message.guild.id]);
+				// if(!message.member.voiceChannel) return message.react('🔇');
+				// if(!words[1]) return;
+				// let searchString = words.slice(1).join(' ');
+				// let msgAuthor = message.author.username;
 				
-				let videos = await youtube.searchVideos(searchString, 10);
+				// let videos = await youtube.searchVideos(searchString, 10);
 				
-				message.channel.send(`
-					${videos.map( (vid, index) => `**${++index}. ** ${vid.title}`).join('\n')}
-				`).catch( err => {
-					console.log(err);
-					return message.channel.send('Not my bad. Youtube dumb.');
-				});
+				// message.channel.send(`
+					// ${videos.map( (vid, index) => `**${++index}. ** ${vid.title}`).join('\n')}
+				// `).catch( err => {
+					// console.log(err);
+					// return message.channel.send('Not my bad. Youtube dumb.');
+				// });
 				
-				let songIndex;
+				// let songIndex;
 				
-				await message.channel.awaitMessages(msg => msg.content > 0, {
-					max: 1,
-					time: 15000,
-					errors: ['time'],
-				})
-				.then((collected) => {
-					if(!collected) return;
-					songIndex = collected.first().content;
-				})
-				.catch(() => {
-					message.channel.send('No correct song picked.');
-					return;
-				});
-				if(!songIndex) break;
+				// await message.channel.awaitMessages(msg => msg.content > 0, {
+					// max: 1,
+					// time: 15000,
+					// errors: ['time'],
+				// })
+				// .then((collected) => {
+					// if(!collected) return;
+					// songIndex = collected.first().content;
+				// })
+				// .catch(() => {
+					// message.channel.send('No correct song picked.');
+					// return;
+				// });
+				// if(!songIndex) break;
 				
-				if(videos[songIndex - 1].durationSeconds > 420) return message.channel.send('Video too long.');
+				// if(videos[songIndex - 1].durationSeconds > 420) return message.channel.send('Video too long.');
 				
-				let url = videos[songIndex - 1].url;
+				// let url = videos[songIndex - 1].url;
 				
-				yt.getInfo(url, (err, info) => {
-					if(err) return message.channel.send('Shitty link.');
-					servers[message.guild.id].songs.push( {url: url, title: info.title, requester: message.author.username} );
-					message.channel.send(`\`\`\`Added: ${info.title}\`\`\``);
-				});
+				// yt.getInfo(url, (err, info) => {
+					// if(err) return message.channel.send('Shitty link.');
+					// servers[message.guild.id].songs.push( {url: url, title: info.title, requester: message.author.username} );
+					// message.channel.send(`\`\`\`Added: ${info.title}\`\`\``);
+				// });
 				break;
 				
 			case 'l':
@@ -234,25 +243,83 @@ Use me for whatever you want.`
 			case 'trump': commands.trump.dothis(message);
 				break;
 				
+			case 'sounds':
+				sounds = [];
+				let count = 1;
+				// for(let i = 0; i < soundNames.length; i++){
+					// request.head('http://game-a5.granbluefantasy.jp/assets/sound/voice/'+ words[1] +'_'+soundNames[i]+'1.mp3').then( res => {
+						// if(!sounds.includes(soundNames[i])){
+							// sounds.push(soundNames[i]);
+							// console.log(sounds);
+						// }else{}
+					// });
+				// }
+				
+				try{
+					for(let i = 0; i < soundNames.length; i++){
+						for(let j = 1; j < 4; j++){
+							for(let k = 0; k < adds.length; k++){
+								request.head('http://game-a5.granbluefantasy.jp/assets/sound/voice/'+ words[1] +'_'+soundNames[i]+j+adds[k]+'.mp3').then( res => {
+									if(!sounds.includes(soundNames[i])){
+										sounds.push(soundNames[i]);
+									}else{}
+									console.log(count);
+									count++;
+									if(count == 433){
+										console.log('-----done-----');
+										console.log(sounds);
+									}
+								}).catch(e => {
+									console.log(count);
+									count++;
+									if(count == 433){
+										console.log('-----done-----');
+										console.log(sounds);
+									}
+								});
+							}
+						}
+					}
+				}catch(e){ console.log(e.stack); }
+				
+				// for(let i = 0; i < soundNames.length; i++){
+					// for(let j = 1; j < 4; j++){
+						// request.head('http://game-a5.granbluefantasy.jp/assets/sound/voice/'+ words[1] +'_'+soundNames[i]+'0'+j+'.mp3').then( res => {
+							// if(!sounds.includes(soundNames[i])){
+									// sounds.push(soundNames[i]);
+									// console.log(sounds);
+								// }
+						// }).catch( (e) => {} );
+					// }
+				// }
+				break;
+				
 			default: message.react('⛔');
 		}
 	}
 });
 
 
-bot.on('messageReactionAdd', () => {
+bot.on('messageReactionAdd', emo => {
 	try{
-		if(message.author.username == 'Paako' && message.attachments.first().url ) {
-			message.react( "\u0031\u20E3" );
-			const filter = (reaction, user) => reaction.emoji.name === "\u0031\u20E3" && !user.bot;
-			const collector = message.createReactionCollector(filter);
-			collector.on('collect', () => {
-				message.channel.send(message.attachments.first().url);
-				collector.stop();
-			});
+		if(emo.message.author.bot) return;
+		
+		if( emo.message.attachments.first() || emo.message.embeds[0] ){
+		    if( emo.message.attachments.first().url || emo.message.embeds[0].image ){
+				const filter = (reaction, user) => reaction.emoji.name === "\u0031\u20E3" && !user.bot;
+				const collector = emo.message.createReactionCollector(filter);
+				collector.on('collect', () => {
+					request.get('https://iqdb.org/?url=http://i.4cdn.org/vg/1545235350894s.jpg').then( result => {
+						let sauce = JSON.parse(result.text);
+						console.log(sauce);
+					});
+					collector.stop();
+				});
+			}
 		}
 	}catch(err){ console.log(err); }
 });
+
 
 bot.on('guildMemberAdd', member => {
   const channel = member.guild.channels.find(ch => ch.name === 'general');
@@ -262,3 +329,4 @@ bot.on('guildMemberAdd', member => {
 
 
 bot.login(process.env.BOT_TOKEN);
+// bot.login(BOT_TOKEN);
