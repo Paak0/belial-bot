@@ -255,18 +255,8 @@ Use me for whatever you want.`
 									sounds[i] = soundNames[i];
 								}else{}
 								count++;
-								if(count == 433){
-									console.log('-----done-----'+words[1]);
-									console.log(sounds);
-									message.channel.send(`\[${sounds.map( (s, index) => `\'${s}\'`).join(', ')}\]`);
-								}
 							}).catch(e => {
 								count++;
-								if(count == 433){
-									console.log('-----done-----'+words[1]);
-									console.log(sounds);
-									message.channel.send(`${sounds.map( (s, index) => `\'${s}\'`).join(', ')}`);
-								}
 							});
 						}
 					}
@@ -278,21 +268,19 @@ Use me for whatever you want.`
 							if(!sounds.includes(soundNames[i])){
 									sounds[i] = soundNames[i];
 							}else{}
-							console.log(count);
 							count++;
-							// if(count == 433){
-								// console.log('-----done-----'+words[1]);
-								// console.log(sounds);
-								// message.channel.send(`\[${sounds.map( (s, index) => `\'${s}\'`).join(', ')}\]`);
-							// }
+							if(count == 525){
+								console.log('-----done-----'+words[1]);
+								console.log(sounds);
+								message.channel.send(`\[${sounds.map( (s, index) => `\'${s}\'`).join(', ')}\]`);
+							}
 						}).catch( (e) => {
-							console.log(count);
 							count++;
-							// if(count == 433){
-								// console.log('-----done-----'+words[1]);
-								// console.log(sounds);
-								// message.channel.send(`${sounds.map( (s, index) => `\'${s}\'`).join(', ')}`);
-							// }
+							if(count == 525){
+								console.log('-----done-----'+words[1]);
+								console.log(sounds);
+								message.channel.send(`${sounds.map( (s, index) => `\'${s}\'`).join(', ')}`);
+							}
 						} );
 					}
 				}
