@@ -1,6 +1,11 @@
 const request = require('superagent');
 const Jimp = require('jimp');
 const belial = require('./belial.js');
+const YouTube = require('simple-youtube-api');
+const youtube = new YouTube(process.env.YT_KEY);
+// const youtube = new YouTube(YT_KEY);
+const yt = require('ytdl-core');
+
 
 module.exports = {
 	
@@ -12,7 +17,7 @@ module.exports = {
 		}
 	},
 	
-	'random': {
+	'random': {//done
 		name: 'random',
 		desc: 'Get random number. [default 0-10]',
 		dothis: function(msg){
@@ -20,29 +25,21 @@ module.exports = {
 			let min = args.length > 2 && !isNaN( Number(args[1]) ) ? parseInt(args[1]) : 0;
 			let max = !isNaN( Number(args[2]) ) || !isNaN( Number(args[1]) ) ? parseInt(args[2]) || parseInt(args[1]) : 11;
 			let randomNumber = Math.floor( Math.random()*(max - min) + min );
-			msg.channel.send('Your number: 	' + randomNumber);
+			msg.channel.send(`Your number: ${randomNumber}`);
 		}
 	},
 	
-	'avatar': {
+	'avatar': {//done
 		name: 'avatar',
 		desc: 'Show avatar.',
 		dothis: function(msg){
 			let user = msg.mentions.users.first() || msg.author;
 				
-			msg.channel.send( {'embed': {
-				'image': {
-				  'url': user.displayAvatarURL
-				}
-			}});
+			msg.channel.send( {'embed':{ 'image':{ 'url': user.displayAvatarURL } } } );
 			
 			if( user.username != 'Belial' && Math.random() < 0.5 ){
 				let randomNumber = Math.floor( Math.random() * belial.messages.length );
-				msg.channel.send( 
-					user +' '+ belial.messages.find( (elem, index) => {
-						return index === randomNumber;
-					})
-				);
+				msg.channel.send(  user +' '+ belial.messages.find( (elem, index) => { return index === randomNumber; } ) );
 			}
 		}
 	},
@@ -70,15 +67,15 @@ module.exports = {
 					{	"name": "Roles",
 						"value": "blahblahblah" }
 				]
-			}}).catch( err => { return console.log(err); });
+			}}).catch( e => { return console.log(e.stack); } );
 		}
 	},
 	
-	'slap': {
+	'slap': {//done
 		name: 'slap',
 		desc: 'Slap someone',
 		dothis: function(msg){
-			let mention = msg.mentions.users.first();
+			let mention = msg.mentions.users.first() || null;
 			if(!mention) return msg.reply(`You just wasted 1 slap. Think about your existance. ${bot.emojis.find(emoji => emoji.name === 'kannaangry2')}`);
 				
 			let bg = 'https://i.imgur.com/1wevUnK.jpg';
@@ -90,8 +87,8 @@ module.exports = {
 				Jimp.read(img1).then( function(front1){
 					front1.resize(100, 100);
 					Jimp.read(bg).then( function(back){
-						back.composite(front2, 60, 280).composite(front1, 220, 140).getBuffer(Jimp.MIME_JPEG, (err, buffer) => {
-							if(err) return console.log('Oh no. Error during slap.');
+						back.composite(front2, 60, 280).composite(front1, 220, 140).getBuffer(Jimp.MIME_JPEG, (e, buffer) => {
+							if(e) return console.log(e.stack);
 							msg.channel.send({ files: [{ attachment: buffer, name: 'slapped.jpg' }] }).then( () => {
 								if(mention.username === 'Belial') msg.channel.send(`MY INNER MASOCHISM IS SCREAMING!!!\nUHOOHOHOHOHOHOOOHOOOOOO!!!`);
 							});;
@@ -105,29 +102,66 @@ module.exports = {
 	'join': {
 		name: 'join',
 		desc: 'Join to voice channel.',
-		dothis: function(msg, servers){
-			if(!servers[msg.guild.id]) servers[msg.guild.id] = { name: msg.guild.name, playing: false, songs: [] };
-			let voiceChannel = msg.member.voiceChannel || null;
-			if(voiceChannel) voiceChannel.join();
-			else msg.channel.send('Notto in voice channeru.');
+		dothis: function(msg, s){
+			if(!s) s = { name: msg.guild.name, playing: false, songs: [] };
+			if(s.currentVoiceChannel === msg.member.voiceChannel) return msg.channel.send("I'm already in this channeru.");;
+			s.currentVoiceChannel = msg.member.voiceChannel || null;
+			s.currentVoiceChannel ? s.currentVoiceChannel.join() : msg.channel.send('Notto in voice channeru.');
 		}
 	},
 	
 	'leave': {
 		name: 'leave',
 		desc: 'Leave voice channel.',
-		dothis: function(msg){
-			let voiceChannel = msg.member.voiceChannel;
-			if(voiceChannel) voiceChannel.leave();
-			else msg.channel.send('Notto in voice channeru.');
+		dothis: function(msg, s){
+			if(!s.currentVoiceChannel) return msg.channel.send("I'm not in voice channeru.");
+			if(s.currentVoiceChannel != msg.member.voiceChannel) return msg.channel.send('Nah.');
+			s.currentVoiceChannel.leave();
+			s.currentVoiceChannel = null;
 		}
 	},
 	
 	'add': {
 		name: 'add',
 		desc: 'Add song to list.',
-		dothis: function(msg){
+		dothis: async function(msg, s){
+			if(!msg.member.voiceChannel) return msg.react('đź”‡');
+			if(!words[1]) return;
+			let searchString = words.slice(1).join(' ');
+			let msgAuthor = msg.author.username;
 			
+			let videos = await youtube.searchVideos(searchString, 10);
+			
+			msg.channel.send(`
+				${videos.map( (vid, index) => `**${++index}. ** ${vid.title}`).join('\n')}
+			`).catch( err => {
+				console.log(err);
+				return msg.channel.send('Not my bad. Youtube dumb.');
+			});
+			
+			let songIndex;
+			
+			await msg.channel.awaitMessages(msg => msg.content > 0, {
+				max: 1,
+				time: 15000,
+				errors: ['time'],
+			})
+			.then((collected) => {
+				if(!collected) return;
+				songIndex = collected.first().content;
+			})
+			.catch(() => { return msg.channel.send('No correct song picked.'); });
+			if(!songIndex) break;
+			
+			if(videos[songIndex - 1].durationSeconds > 420) return msg.channel.send('Video too long.');
+			
+			let url = videos[songIndex - 1].url;
+			
+			yt.getInfo(url, (err, info) => {
+				if(err) return msg.channel.send('Shitty link.');
+				s.songs.push( {url: url, title: info.title, requester: msg.author.username} );
+				msg.channel.send(`\`\`\`Added: ${info.title}\`\`\``);
+			}).catch( () => { return console.log('Youtube search error.'); } );
 		}
 	},
 	
