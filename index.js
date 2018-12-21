@@ -247,43 +247,55 @@ Use me for whatever you want.`
 				sounds = [];
 				let count = 1;
 				
-				try{
-					for(let i = 0; i < soundNames.length; i++){
-						for(let j = 1; j < 4; j++){
-							for(let k = 0; k < adds.length; k++){
-								request.head('http://game-a5.granbluefantasy.jp/assets/sound/voice/'+ words[1] +'_'+soundNames[i]+j+adds[k]+'.mp3').then( res => {
-									if(!sounds.includes(soundNames[i])){
-										sounds[i] = soundNames[i];
-									}else{}
-									count++;
-									if(count == 433){
-										console.log('-----done-----'+words[1]);
-										console.log(sounds);
-										message.channel.send(`${sounds.map( (s, index) => `\'${s}\'`).join(', ')}`);
-									}
-								}).catch(e => {
-									count++;
-									if(count == 433){
-										console.log('-----done-----'+words[1]);
-										console.log(sounds);
-										message.channel.send(`${sounds.map( (s, index) => `\'${s}\'`).join(', ')}`);
-									}
-								});
-							}
+				for(let i = 0; i < soundNames.length; i++){
+					for(let j = 1; j < 4; j++){
+						for(let k = 0; k < adds.length; k++){
+							request.head('http://game-a5.granbluefantasy.jp/assets/sound/voice/'+ words[1] +'_'+soundNames[i]+j+adds[k]+'.mp3').then( res => {
+								if(!sounds.includes(soundNames[i])){
+									sounds[i] = soundNames[i];
+								}else{}
+								count++;
+								if(count == 433){
+									console.log('-----done-----'+words[1]);
+									console.log(sounds);
+									message.channel.send(`\[${sounds.map( (s, index) => `\'${s}\'`).join(', ')}\]`);
+								}
+							}).catch(e => {
+								count++;
+								if(count == 433){
+									console.log('-----done-----'+words[1]);
+									console.log(sounds);
+									message.channel.send(`${sounds.map( (s, index) => `\'${s}\'`).join(', ')}`);
+								}
+							});
 						}
 					}
-				}catch(e){ console.log(e.stack); }
+				}
 				
-				// for(let i = 0; i < soundNames.length; i++){
-					// for(let j = 1; j < 4; j++){
-						// request.head('http://game-a5.granbluefantasy.jp/assets/sound/voice/'+ words[1] +'_'+soundNames[i]+'0'+j+'.mp3').then( res => {
-							// if(!sounds.includes(soundNames[i])){
-									// sounds.push(soundNames[i]);
-									// console.log(sounds);
-								// }
-						// }).catch( (e) => {} );
-					// }
-				// }
+				for(let i = 0; i < soundNames.length; i++){
+					for(let j = 1; j < 4; j++){
+						request.head('http://game-a5.granbluefantasy.jp/assets/sound/voice/'+ words[1] +'_'+soundNames[i]+'0'+j+'.mp3').then( res => {
+							if(!sounds.includes(soundNames[i])){
+									sounds[i] = soundNames[i];
+							}else{}
+							console.log(count);
+							count++;
+							// if(count == 433){
+								// console.log('-----done-----'+words[1]);
+								// console.log(sounds);
+								// message.channel.send(`\[${sounds.map( (s, index) => `\'${s}\'`).join(', ')}\]`);
+							// }
+						}).catch( (e) => {
+							console.log(count);
+							count++;
+							// if(count == 433){
+								// console.log('-----done-----'+words[1]);
+								// console.log(sounds);
+								// message.channel.send(`${sounds.map( (s, index) => `\'${s}\'`).join(', ')}`);
+							// }
+						} );
+					}
+				}
 				break;
 				
 			default: message.react('⛔');
