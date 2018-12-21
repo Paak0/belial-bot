@@ -25,7 +25,7 @@ let currentlyPlayed;
 let soundNames = ['them', 'us', 'ability_them', 'ability_us', 'mypage', 'cutin', 
 				  'win', 'lose', 'attack', 'kill', 'ready', 'mortal', 'damage', 
 				  'dying', 'zenith_up', 'runk_up', 'introduce', 'evolution', 'formation', 
-				  'archive', 'to_player', 'healed', 'hp_down', 'power_down'];
+				  'archive', 'to_player', 'healed', 'helaled', 'hp_down', 'power_down'];
 let adds = ['', 'a', 'b', '_a', '_b', '_mix'];
 let sounds = [];
 
@@ -246,14 +246,6 @@ Use me for whatever you want.`
 			case 'sounds':
 				sounds = [];
 				let count = 1;
-				// for(let i = 0; i < soundNames.length; i++){
-					// request.head('http://game-a5.granbluefantasy.jp/assets/sound/voice/'+ words[1] +'_'+soundNames[i]+'1.mp3').then( res => {
-						// if(!sounds.includes(soundNames[i])){
-							// sounds.push(soundNames[i]);
-							// console.log(sounds);
-						// }else{}
-					// });
-				// }
 				
 				try{
 					for(let i = 0; i < soundNames.length; i++){
@@ -261,20 +253,20 @@ Use me for whatever you want.`
 							for(let k = 0; k < adds.length; k++){
 								request.head('http://game-a5.granbluefantasy.jp/assets/sound/voice/'+ words[1] +'_'+soundNames[i]+j+adds[k]+'.mp3').then( res => {
 									if(!sounds.includes(soundNames[i])){
-										sounds.push(soundNames[i]);
+										sounds[i] = soundNames[i];
 									}else{}
-									console.log(count);
 									count++;
 									if(count == 433){
-										console.log('-----done-----');
+										console.log('-----done-----'+words[1]);
 										console.log(sounds);
+										message.channel.send(`${sounds}`);
 									}
 								}).catch(e => {
-									console.log(count);
 									count++;
 									if(count == 433){
-										console.log('-----done-----');
+										console.log('-----done-----'+words[1]);
 										console.log(sounds);
+										message.channel.send(`${sounds}`);
 									}
 								});
 							}
