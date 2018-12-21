@@ -243,7 +243,7 @@ Use me for whatever you want.`
 			case 'trump': commands.trump.dothis(message);
 				break;
 				
-			case 'sounds':
+			case 'test':
 				sounds = [];
 				let count = 1;
 				
@@ -272,14 +272,14 @@ Use me for whatever you want.`
 							if(count == 525){
 								console.log('-----done-----'+words[1]);
 								console.log(sounds);
-								message.channel.send(`\[${sounds.map( (s, index) => `\'${s}\'`).join(', ')}\]`);
+								message.channel.send(`\[${sounds.map( (s, index) => `\'${s}\'`).join(',')}\],\'other\'`);
 							}
 						}).catch( (e) => {
 							count++;
 							if(count == 525){
 								console.log('-----done-----'+words[1]);
 								console.log(sounds);
-								message.channel.send(`${sounds.map( (s, index) => `\'${s}\'`).join(', ')}`);
+								message.channel.send(`\[${sounds.map( (s, index) => `\'${s}\'`).join(',')}\],\'other\'`);
 							}
 						} );
 					}
