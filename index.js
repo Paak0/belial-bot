@@ -315,7 +315,8 @@ bot.on('messageReactionAdd', emo => {
 				collector.on('collect', () => {
 					request.post('https://saucenao.com/search.php?output_type=2&numres=4&url=https://cdn.discordapp.com/attachments/449311828430815274/542774435434725386/73018891_p0.png').then( result => {
 						//let sauce = JSON.parse(result.body);
-						console.log(result.body.results[0]);//.results[0].data.ext_url[0]);
+						console.log(result.body.results[0].data.ext_urls[0]);
+						emo.message.channel.send(`${result.body.results[0].data.ext_urls[0]}`);
 					});
 					collector.stop();
 				});
