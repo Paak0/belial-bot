@@ -26,7 +26,7 @@ let currentlyPlayed;
 let soundNames = ['them', 'us', 'ability_them', 'ability_us', 'mypage', 'cutin', 
 				  'win', 'lose', 'attack', 'kill', 'ready', 'mortal', 'damage', 
 				  'dying', 'zenith_up', 'runk_up', 'introduce', 'evolution', 'formation', 
-				  'archive', 'to_player', 'healed', 'helaled', 'hp_down', 'power_down', 'player_gauge', 'other'];
+				  'archive', 'to_player', 'healed', 'helaled', 'hp_down', 'power_down', 'player_gauge', 'special', 'v_00'];
 let adds = ['', 'a', 'b', '_a', '_b', '_mix'];
 let sounds = [];
 
@@ -290,17 +290,10 @@ Use me for whatever you want.`
 			case 'sound':
 				let c = [];
 				for(let i = 0; i < characters.ssr.length; i++){
-					for(let j = 1; j < 4; j++){
-						for(let k = 0; k < adds.length; k++){
-							request.head('http://game-a5.granbluefantasy.jp/assets/sound/voice/' + characters.ssr[i].id + '_' + words[1] + j + adds[k] + '.mp3').then( res => {
-								c[i] = characters.ssr[i].name;
-							}).catch(e => {
-								c[i] = ".";
-							});
-						}
-					}
+					request.head('http://game-a5.granbluefantasy.jp/assets/sound/voice/' + characters.ssr[i].id + '_' + words[1] + '.mp3').then( res => {
+						message.channel.send(`${characters.ssr[i].name}`);
+					}).catch(e => {});
 				}
-				message.channel.send(`\[${c.map( (s, index) => `\'${s}\'`).join(', ')}\]`);
 				break;
 				
 			default: message.react('⛔');
