@@ -289,7 +289,7 @@ Use me for whatever you want.`
 				
 			case 'sound':
 				let c = [];
-				for(let i = 0; i < characters.ssr.length; i++)
+				for(let i = 0; i < characters.ssr.length; i++){
 					for(let j = 1; j < 4; j++){
 						for(let k = 0; k < adds.length; k++){
 							request.head('http://game-a5.granbluefantasy.jp/assets/sound/voice/' + characters.ssr[i].id + '_' + words[1] + j + adds[k] + '.mp3').then( res => {
