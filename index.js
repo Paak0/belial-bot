@@ -5,7 +5,7 @@ const Discord = require('discord.js');
 const bot = new Discord.Client();
 
 const commands = require('./src/commands.js');
-const characters = requre('./src/characters.json');
+const characters = require('./src/characters.json');
 const commandPrefix = '.';
 
 const commandsNames = [
