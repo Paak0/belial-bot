@@ -26,7 +26,7 @@ let currentlyPlayed;
 let soundNames = ['them', 'us', 'ability_them', 'ability_us', 'mypage', 'cutin', 
 				  'win', 'lose', 'attack', 'kill', 'ready', 'mortal', 'damage', 
 				  'dying', 'zenith_up', 'runk_up', 'introduce', 'evolution', 'formation', 
-				  'archive', 'to_player', 'healed', 'helaled', 'hp_down', 'power_down', 'player_gauge', 'special', 'v_00'];
+				  'archive', 'to_player', 'healed', 'helaled', 'hp_down', 'power_down', 'player_gauge', 'special'];
 let adds = ['', 'a', 'b', '_a', '_b', '_mix'];
 let sounds = [];
 
@@ -308,13 +308,14 @@ bot.on('messageReactionAdd', emo => {
 		if(emo.message.author.bot) return;
 		
 		if( emo.message.attachments.first() || emo.message.embeds[0] ){
-		    if( emo.message.attachments.first().url || emo.message.embeds[0].image ){
+			let url = emo.message.attachments.first().url || emo.message.embeds[0].image.url || 0;
+		    if( url ){
 				const filter = (reaction, user) => reaction.emoji.name === "\u0031\u20E3" && !user.bot;
 				const collector = emo.message.createReactionCollector(filter);
 				collector.on('collect', () => {
-					request.get('https://iqdb.org/?url=http://i.4cdn.org/vg/1545235350894s.jpg').then( result => {
-						let sauce = JSON.parse(result.text);
-						console.log(sauce);
+					request.get('https://saucenao.com/search.php?output_type=2&numres=4&url=' + url).then( result => {
+						let sauce = JSON.parse(result);
+						console.log(sauce.results[0].data.ext_url[0]);
 					});
 					collector.stop();
 				});
