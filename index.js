@@ -294,6 +294,7 @@ Use me for whatever you want.`
 						message.channel.send(`${characters.ssr[i].name}`);
 					}).catch(e => {});
 				}
+				message.channel.send(`---- done ----`);
 				break;
 				
 			default: message.react('⛔');
