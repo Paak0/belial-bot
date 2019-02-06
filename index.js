@@ -313,7 +313,7 @@ bot.on('messageReactionAdd', emo => {
 				const filter = (reaction, user) => reaction.emoji.name === "\u0031\u20E3" && !user.bot;
 				const collector = emo.message.createReactionCollector(filter);
 				collector.on('collect', () => {
-					request.get('https://saucenao.com/search.php?output_type=2&numres=4&url=https://cdn.discordapp.com/attachments/449311828430815274/542774435434725386/73018891_p0.png').then( result => {
+					request.post('https://saucenao.com/search.php?output_type=2&numres=4&url=https://cdn.discordapp.com/attachments/449311828430815274/542774435434725386/73018891_p0.png').then( result => {
 						let sauce = JSON.parse(result);
 						console.log(sauce.results[0].data.ext_url[0]);
 					});
