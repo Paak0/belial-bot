@@ -313,8 +313,9 @@ bot.on('messageReactionAdd', emo => {
 		const collector = emo.message.createReactionCollector(filter);
 		collector.on('collect', () => {
 			request.post(url).then( r => {
+				let sauce = r.body.results.filter( s => return s.header.similarity > 80.00 );
 				emo.message.channel.send(`
-**SauceNAO results:**\n${r.body.results.map( (s, index) => `**${++index}.** Accurancy: ${s.header.similarity}% ${s.data.ext_urls[0]}`).join('\n')}
+**SauceNAO results:**\n${sauce.map( (s, index) => `**${++index}.** Accurancy: ${s.header.similarity}% ${s.data.ext_urls[0]}`).join('\n')}
 				`);
 			});
 			collector.stop();
