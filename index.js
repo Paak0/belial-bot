@@ -312,8 +312,8 @@ bot.on('messageReactionAdd', emo => {
 		const filter = (reaction, user) => reaction.emoji.name === "\u0031\u20E3" && !user.bot;
 		const collector = emo.message.createReactionCollector(filter);
 		collector.on('collect', () => {
-			request.post(url).then( res => {
-				emo.message.channel.send(`${res.body.results[0].data.ext_urls[0]}`);
+			request.post(url).then( result => {
+				emo.message.channel.send(`${result.body.results[0].data.ext_urls[0]}`);
 				emo.message.channel.send(`
 					${result.body.results.map( (s, index) => `**${++index}. ** ${s.data.ext_urls[0]}`).join('\n')}
 				`);
