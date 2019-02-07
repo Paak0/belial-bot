@@ -314,7 +314,8 @@ bot.on('messageReactionAdd', emo => {
 		collector.on('collect', () => {
 			request.post(url).then( r => {
 				emo.message.channel.send(`
-					${r.body.results.map( (s, index) => `**SauceNAO results:\n${++index}.** Similarity: ${s.header.similarity}% ${s.data.ext_urls[0]}`).join('\n')}
+					**SauceNAO results:**\n
+					${r.body.results.map( (s, index) => `**${++index}.** Accurancy: ${s.header.similarity}% ${s.data.ext_urls[0]}`).join('\n')}
 				`);
 			});
 			collector.stop();
