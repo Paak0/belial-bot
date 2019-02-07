@@ -313,8 +313,7 @@ bot.on('messageReactionAdd', emo => {
 		const collector = emo.message.createReactionCollector(filter);
 		collector.on('collect', () => {
 			request.post(url).then( r => {
-				emo.message.channel.send(`
-					**SauceNAO results:**\n
+				emo.message.channel.send(`**SauceNAO results:**\n
 					${r.body.results.map( (s, index) => `**${++index}.** Accurancy: ${s.header.similarity}% ${s.data.ext_urls[0]}`).join('\n')}
 				`);
 			});
