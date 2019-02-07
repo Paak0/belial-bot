@@ -313,12 +313,12 @@ bot.on('messageReactionAdd', emo => {
 		const collector = emo.message.createReactionCollector(filter);
 		collector.on('collect', () => {
 			request.post(url).then( result => {
-				//emo.message.channel.send(`${result.body.results[0].data.ext_urls[0]}`);
-				emo.message.channel.send(`
-					${result.body.results.map( (sauce, index) => `**${++index}. ** ${sauce.data.ext_urls[0]}`).join('\n')}
-				`).catch( err => {
-					console.log(err);
-				});
+				emo.message.channel.send(`${result.body.results[0].data.ext_urls[0]}`);
+				// emo.message.channel.send(`
+					// ${result.body.results.map( (sauce, index) => `**${++index}. ** ${sauce.data.ext_urls[0]}`).join('\n')}
+				// `).catch( err => {
+					// console.log(err);
+				// });
 			});
 			collector.stop();
 			emo.message.clearReactions();
