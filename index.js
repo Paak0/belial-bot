@@ -312,17 +312,12 @@ bot.on('messageReactionAdd', emo => {
 		const filter = (reaction, user) => reaction.emoji.name === "\u0031\u20E3" && !user.bot;
 		const collector = emo.message.createReactionCollector(filter);
 		collector.on('collect', () => {
-			let data;
-			request.post(url).then( result => {
-				data = result.body.results;
-				//emo.message.channel.send(`${data[0].data.ext_urls[0]}`);
-			}).then(
+			request.post(url).then( res => {
+				emo.message.channel.send(`${res.body.results[0].data.ext_urls[0]}`);
 				emo.message.channel.send(`
-					${data.map( (s, index) => `**${++index}. ** ${s.data.ext_urls[0]}`).join('\n')}
-				`).catch( err => {
-					console.log(err);
-				});
-			);
+					${result.body.results.map( (s, index) => `**${++index}. ** ${s.data.ext_urls[0]}`).join('\n')}
+				`);
+			});
 			collector.stop();
 			emo.message.clearReactions();
 		});
