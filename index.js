@@ -271,14 +271,14 @@ Use me for whatever you want.`
 							}else{}
 							count++;
 							if(count == 525){
-								console.log('-----done-----'+words[1]);
+								console.log('<----- done ------>'+words[1]);
 								console.log(sounds);
 								message.channel.send(`\[${sounds.map( (s, index) => `\'${s}\'`).join(', ')}, \'other\'\]`);
 							}
 						}).catch( (e) => {
 							count++;
 							if(count == 525){
-								console.log('-----done-----'+words[1]);
+								console.log('<----- done ------>'+words[1]);
 								console.log(sounds);
 								message.channel.send(`\[${sounds.map( (s, index) => `\'${s}\'`).join(', ')}, \'other\'\]`);
 							}
@@ -294,7 +294,7 @@ Use me for whatever you want.`
 						message.channel.send(`${characters.ssr[i].name}`);
 					}).catch(e => {});
 				}
-				message.channel.send(`---- done ----`);
+				message.channel.send(`<----- done ----->`);
 				break;
 				
 			default: message.react('⛔');
@@ -304,32 +304,28 @@ Use me for whatever you want.`
 
 
 bot.on('messageReactionAdd', emo => {
-	try{
-		if(emo.message.author.bot) return;
-		
-		if( emo.message.attachments.first() || emo.message.embeds[0] ){
-			let url = emo.message.attachments.first().url || emo.message.embeds[0].image.url || 0;
-		    if( url ){
-				const filter = (reaction, user) => reaction.emoji.name === "\u0031\u20E3" && !user.bot;
-				const collector = emo.message.createReactionCollector(filter);
-				collector.on('collect', () => {
-					request.post('https://saucenao.com/search.php?output_type=2&numres=4&url=https://cdn.discordapp.com/attachments/449311828430815274/542774435434725386/73018891_p0.png').then( result => {
-						//let sauce = JSON.parse(result.body);
-						console.log(result.body.results[0].data.ext_urls[0]);
-						emo.message.channel.send(`${result.body.results[0].data.ext_urls[0]}`);
-					});
-					collector.stop();
-				});
-			}
-		}
-	}catch(err){ console.log(err); }
+	if( emo.message.author.bot ) return;
+	if( emo.message.attachments.first() || emo.message.embeds[0] ){
+		let imageurl = emo.message.attachments.first().url || emo.message.embeds[0].image.url || 0;
+		if( !imageurl ) return console.log('<----- No image url. ----->');
+		let url = 'https://saucenao.com/search.php?output_type=2&numres=4&url=' + imageurl;
+		const filter = (reaction, user) => reaction.emoji.name === "\u0031\u20E3" && !user.bot;
+		const collector = emo.message.createReactionCollector(filter);
+		collector.on('collect', () => {
+			request.post(url).then( result => {
+				emo.message.channel.send(`${result.body.results[0].data.ext_urls[0]}`);
+			});
+			collector.stop();
+			emo.message.reactions.deleteAll();
+		});
+	}
 });
 
 
 bot.on('guildMemberAdd', member => {
   const channel = member.guild.channels.find(ch => ch.name === 'general');
   if (!channel) return;
-  channel.send(`Welcome to the server, ${member}. \n Have fun with these guys.`);
+  channel.send(`<----- Welcome to the server, ${member}. \n Have fun with these guys. ----->`);
 });
 
 
