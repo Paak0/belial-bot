@@ -308,15 +308,18 @@ bot.on('messageReactionAdd', emo => {
 	if( emo.message.attachments.first() || emo.message.embeds[0] ){
 		let imageurl = emo.message.attachments.first().url || emo.message.embeds[0].image.url || 0;
 		if( !imageurl ) return console.log('<----- No image url. ----->');
-		let url = 'https://saucenao.com/search.php?output_type=2&numres=4&url=' + imageurl;
 		const filter = (reaction, user) => reaction.emoji.name === "\u0031\u20E3" && !user.bot;
 		const collector = emo.message.createReactionCollector(filter);
 		collector.on('collect', () => {
+			let url = 'https://saucenao.com/search.php?output_type=2&numres=5&minsim=80&url=' + imageurl;
 			request.post(url).then( result => {
-				emo.message.channel.send(`${result.body.results[0].data.ext_urls[0]}`);
+				//emo.message.channel.send(`${result.body.results[0].data.ext_urls[0]}`);
+				emo.message.channel.send(`
+					${result.body.results.map( (sauce, index) => `**${++index}. ** ${sauce.data.ext_urls[0]}`).join('\n')}
+				`)
 			});
 			collector.stop();
-			emo.message.reactions.deleteAll();
+			emo.message.clearReactions();
 		});
 	}
 });
