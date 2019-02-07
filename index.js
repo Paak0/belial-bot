@@ -316,7 +316,7 @@ bot.on('messageReactionAdd', emo => {
 				//emo.message.channel.send(`${result.body.results[0].data.ext_urls[0]}`);
 				emo.message.channel.send(`
 					${result.body.results.map( (sauce, index) => `**${++index}. ** ${sauce.data.ext_urls[0]}`).join('\n')}
-				`)
+				`);
 			});
 			collector.stop();
 			emo.message.clearReactions();
