@@ -1,8 +1,11 @@
+const config = require('./config.js');
+const ytToken = config.yt || process.env.YT_KEY;
 const request = require('superagent');
+const fetch = require('node-fetch');
 const Jimp = require('jimp');
 const belial = require('./belial.js');
 const YouTube = require('simple-youtube-api');
-const youtube = new YouTube(process.env.YT_KEY);
+const youtube = new YouTube(ytToken);
 // const youtube = new YouTube(YT_KEY);
 const yt = require('ytdl-core');
 
@@ -12,6 +15,14 @@ module.exports = {
 	'temp': {
 		name: '',
 		desc: '',
+		dothis: function(msg){
+			
+		}
+	},
+	
+	'ping': {
+		name: 'ping',
+		desc: 'Ping me to see if i am alive.',
 		dothis: function(msg){
 			
 		}
@@ -33,11 +44,11 @@ module.exports = {
 		name: 'avatar',
 		desc: 'Show avatar.',
 		dothis: function(msg){
-			let user = msg.mentions.users.first() || msg.author;
-				
+			let user = msg.mentions.users.first() || msg.author || 0;
+			if(!user) return;
 			msg.channel.send( {'embed':{ 'image':{ 'url': user.displayAvatarURL } } } );
 			
-			if( user.username != 'Belial' && Math.random() < 0.5 ){
+			if( user.username != 'Belial' && Math.random() < 0.4 ){
 				let randomNumber = Math.floor( Math.random() * belial.messages.length );
 				msg.channel.send(  user +' '+ belial.messages.find( (elem, index) => { return index === randomNumber; } ) );
 			}
@@ -48,7 +59,8 @@ module.exports = {
 		name: 'info',
 		desc: 'User informations.',
 		dothis: function(msg){
-			let mbr = msg.mentions.members.first() || msg.member;
+			let mbr = msg.mentions.members.first() || msg.member || 0;
+			if(!mbr) return;
 			msg.channel.send( {"embed": {
 				"color": mbr.displayColor,
 				"thumbnail": { "url": mbr.user.displayAvatarURL },
@@ -65,7 +77,7 @@ module.exports = {
 					{	"name": "Joined guild",
 						"value": mbr.joinedAt },
 					{	"name": "Roles",
-						"value": "blahblahblah" }
+						"value": "soonTM" }
 				]
 			}}).catch( e => { return console.log(e.stack); } );
 		}
@@ -228,7 +240,7 @@ module.exports = {
 	},
 	
 	'8ball': {
-		name: 'wisdom',
+		name: '8ball',
 		desc: 'Answer for your question.',
 		dothis: function(msg){
 			request.get('https://8ball.delegator.com/magic/JSON/0').then( (result) => {
@@ -252,8 +264,8 @@ module.exports = {
 						"url": "https://upload.wikimedia.org/wikipedia/commons/5/53/Donald_Trump_official_portrait_%28cropped%29.jpg"
 					},
 					"author": {
-						  "name": "Trump's thought",
-						  "url": thonk._embedded.source[0].url
+						"name": "Trump's thought",
+						"url": thonk._embedded.source[0].url
 					}
 				}});
 			});
@@ -266,9 +278,48 @@ module.exports = {
 		dothis: function(msg){
 			
 		}
+	},
+	
+	'anime': {
+		name: 'anime',
+		desc: 'Look for anime source.',
+		dothis: function(msg){
+			let imageurl = msg.attachments.first().url || msg.embeds[0].image.url || words[1] || 0;
+			
+			Jimp.read(imageurl).then( img => {
+				img.getBase64Async(img.getMIME()).then( res => {
+					fetch('https://trace.moe/api/search', {
+						method: 'POST',
+						body: JSON.stringify({ image: res }),
+						headers: { 'Content-Type': 'application/json' }
+					})
+					.then( res => res.json() )
+					.then( r => {
+						msg.channel.send({ "embed": {
+							"title": r.docs[0].title_romaji || '???',
+							"description": `Episode: ${r.docs[0].episode} || ?,  Time: ${Math.floor(r.docs[0].at/3600)}:${Math.floor(r.docs[0].at/60)}:${Math.floor(r.docs[0].at % 60)}\n
+											[MAL](https://myanimelist.net/anime/${r.docs[0].mal_id})  [ANILIST](https://anilist.co/anime/${r.docs[0].anilist_id})`,
+							"thumbnail": {
+								"url": `https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/${r.docs[0].anilist_id}.jpg`
+							},
+							"author": {
+								"name": r.docs[0].title_native || '???',
+								"url": `https://myanimelist.net/anime/${r.docs[0].mal_id}`
+							}
+						}});
+					})
+					.catch(e => {
+						console.log(e.stack);
+						msg.channel.send(`Nothing.`);
+					});
+					
+				});
+			}).catch(e => console.log(e.stack));
+			
+			
+			
+		}
 	}
-	
-	
 	
 	
 	
