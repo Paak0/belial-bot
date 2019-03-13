@@ -1,9 +1,10 @@
 
-
 const request = require('superagent');
 const Discord = require('discord.js');
 const bot = new Discord.Client();
 
+const config = require('./src/config.js');
+const botToken = config.token || process.env.BOT_TOKEN;
 const commands = require('./src/commands.js');
 const characters = require('./src/characters.json');
 const commandPrefix = '.';
@@ -22,6 +23,8 @@ let randomNumber;
 let voiceChannel;
 let dispatcher;
 let currentlyPlayed;
+let counter = 0;
+let lastMsg = '';
 
 let soundNames = ['them', 'us', 'ability_them', 'ability_us', 'mypage', 'cutin', 
 				  'win', 'lose', 'attack', 'kill', 'ready', 'mortal', 'damage', 
@@ -53,9 +56,26 @@ bot.on('reconnecting', () => {
 
 bot.on('message', async message => {
     if(message.author.bot) return;
-    
+	
 	let words = message.content.toLowerCase().split(' ');
-
+	
+	if(words[0].startsWith('<:')){
+		if(message.content === lastMsg){
+			if(counter == 2){
+				let emo = bot.emojis.find(emoji => emoji.name === words[0].split(':')[1]) || 0;
+				if(emo) message.channel.send(words[0]);
+				counter = 0;
+				lastMsg = '';
+			}else{
+				counter++;
+			}
+		}else{
+			counter = 1;
+			lastMsg = message.content;
+		}
+		console.log(counter);
+	}
+	
 	words.filter( function(word){
 		if(belialWords.indexOf(word) != -1){
 			message.react(bot.emojis.find(emoji => emoji.name === 'ppp'));
@@ -63,15 +83,11 @@ bot.on('message', async message => {
 		}
 	});
 	
-	try{
-		if(message.attachments.first() && message.attachments.first().url || message.embeds[0] && message.embeds[0].image) message.react( "\u0031\u20E3" );
-	}catch(e){ return console.log(e); }
-	
-	if((words[0])[0] === commandPrefix){
+	if(words[0].startsWith(commandPrefix)){
 		if(words[0][1].includes('.')) return;
-		let command = words[0].substring(1);
+		let cmd = words[0].substring(1);
 		
-		switch(command){
+		switch(cmd){
 			case 'h':
 			case 'help':
 				message.channel.send(`
@@ -297,6 +313,10 @@ Use me for whatever you want.`
 				message.channel.send(`<----- done ----->`);
 				break;
 				
+			case 'anime':
+				commands.anime.dothis(message);
+				break;
+				
 			default: message.react('⛔');
 		}
 	}
@@ -314,9 +334,13 @@ bot.on('messageReactionAdd', emo => {
 		collector.on('collect', () => {
 			request.post(url).then( r => {
 				let sauce = r.body.results.filter( s => {return s.header.similarity > 80;} );
-				emo.message.channel.send(`
-**SauceNAO results:**\n${sauce.map( (s, index) => `**${++index}.** Accurancy: ${s.header.similarity}% ${s.data.ext_urls[0]}`).join('\n')}
-				`);
+				if(sauce.length < 1){
+					emo.message.channel.send(`No results.`);
+				}else{
+					emo.message.channel.send(`
+**SauceNAO:**\n${sauce.map( (s, index) => `**${++index}.** Accuracy: ${s.header.similarity}% ${s.data.ext_urls[0]}`).join('\n')}
+					`);
+				}
 			});
 			collector.stop();
 			emo.message.clearReactions();
@@ -332,5 +356,5 @@ bot.on('guildMemberAdd', member => {
 });
 
 
-bot.login(process.env.BOT_TOKEN);
+bot.login(botToken);
 // bot.login(BOT_TOKEN);
