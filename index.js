@@ -40,7 +40,7 @@ bot.on('ready', async () => {
 			currentlyPlayed: {},
 			dispatcher: {}
 		};
-		console.log(g);
+		console.log(g.name);
 	});
 	
     console.log(`
@@ -165,7 +165,7 @@ bot.on('guildCreate', async g => {
 		playing: false,
 		songs: [],
 		voiceChannel: null,
-		currentlyPlayed: '',
+		currentlyPlayed: {},
 		dispatcher: {}
 	};
 });
