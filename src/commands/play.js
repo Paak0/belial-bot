@@ -6,7 +6,7 @@ module.exports = {
 	alias: [],
 	run: (bot, msg) => {
 		let botCh = bot.guilds.get(msg.guild.id).music.voiceChannel;
-		let userCh = msg.member.voiceChannel;
+		let userCh = msg.member.voiceChannel.connection;
 		
 		if(!userCh || !botCh || userCh !== botCh) return msg.react('🔇');
 			
