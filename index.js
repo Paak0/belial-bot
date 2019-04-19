@@ -37,9 +37,10 @@ bot.on('ready', async () => {
 			playing: false,
 			songs: [],
 			voiceChannel: null,
-			currentlyPlayed: '',
+			currentlyPlayed: {},
 			dispatcher: {}
 		};
+		console.log(g);
 	});
 	
     console.log(`
