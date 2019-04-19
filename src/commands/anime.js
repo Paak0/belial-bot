@@ -18,14 +18,14 @@ module.exports = {
 				.then( res => res.json() )
 				.then( r => {
 					msg.channel.send({ "embed": {
-						"title": r.docs[0].title_romaji || '-???-',
-						"description": `Episode: ${r.docs[0].episode} || ?,  Time: ${Math.floor(r.docs[0].at/3600)}:${Math.floor(r.docs[0].at/60)}:${Math.floor(r.docs[0].at % 60)}\n
+						"title": r.docs[0].title_romaji,
+						"description": `Episode: ${r.docs[0].episode},  Time: ${Math.floor(r.docs[0].at/3600)}:${Math.floor(r.docs[0].at/60)}:${Math.floor(r.docs[0].at % 60)}\n
 										[MAL](https://myanimelist.net/anime/${r.docs[0].mal_id})  [ANILIST](https://anilist.co/anime/${r.docs[0].anilist_id})`,
 						"thumbnail": {
 							"url": `https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/${r.docs[0].anilist_id}.jpg`
 						},
 						"author": {
-							"name": r.docs[0].title_native || '-???-',
+							"name": r.docs[0].title_native,
 							"url": `https://myanimelist.net/anime/${r.docs[0].mal_id}`
 						}
 					}});
