@@ -1,8 +1,17 @@
 module.exports = {
 	name: 'help',
-	help: 'Check if bot is online.',
+	help: 'Help.',
 	alias: [],
-	run: (bot, msg) => {
-		msg.channel.send(`${bot.commands.map( c => '\n'+c.name )}`);
+	run: (bot, msg, words) => {
+		if(!words[1]){
+			msg.channel.send(`| ${bot.commands.map( c => c.name+' | ' )}`);
+		}else{
+			let command = bot.commands.get(cmd) || null;
+			if(command){ 
+				msg.channel.send(`${command.name} - ${command.help}`);
+			}else{
+				msg.react('⛔');
+			}
+		}
 	}
 }
