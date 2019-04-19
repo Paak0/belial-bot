@@ -5,10 +5,18 @@ module.exports = {
 	name: 'anime',
 	help: 'Search sauce for anime. [gib image]',
 	alias: [],
-	run: (bot, msg) => {
-		let imageurl = msg.attachments.first().url || msg.embeds[0].image.url || 0;
-		if(!imageurl) return msg.channe.send(`No image.`);
-		Jimp.read(imageurl).then( img => {
+	run: (bot, msg, words) => {
+		if( !msg.attachments.first() && !msg.embeds[0] && !words[1]) return console.log('No img.');
+		
+		let imageUrl;
+		if(msg.attachments.first()) imageUrl = msg.attachments.first().url;
+		else if(words[1] && words[1].startsWith('http')) imageUrl = words[1];
+		else if(msg.embeds[0]) imageUrl = msg.embeds[0].url;
+		else return console.log('No image.');
+		
+		if(!imageUrl) return msg.channe.send(`No image.`);
+		
+		Jimp.read(imageUrl).then( img => {
 			img.getBase64Async(img.getMIME()).then( res => {
 				fetch('https://trace.moe/api/search', {
 					method: 'POST',
