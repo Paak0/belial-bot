@@ -1,5 +1,4 @@
 
-
 const Discord = require('discord.js');
 const fs = require('fs');
 const bot = new Discord.Client();
@@ -75,7 +74,7 @@ bot.on('message', async message => {
 	}
 	
 	words.filter( function(word){
-		if(bot.belial.words.indexOf(word) != -1) return message.react(bot.emojis.find(emoji => emoji.name === 'ppp'));
+		if(bot.belial.words.indexOf(word) != -1) message.react(bot.emojis.find(emoji => emoji.name === 'ppp'));
 	});
 	
 	if(words[0].startsWith(msgGuild.cmdPrefix)){
