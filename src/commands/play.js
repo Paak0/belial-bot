@@ -17,27 +17,28 @@ module.exports = {
 		
 		g.playing = true;
 		
-		play(g, msg);
+		play(bot, msg);
 	}
 }
-	
-function play(serv, message){
-	serv.dispatcher = {};
-	serv.currentlyPlayed = serv.songs.shift();
-	if (!serv.currentlyPlayed){
-		serv.playing = false;
-		serv.currentlyPlayed = '';
+
+function play(botto, message){
+	let b = botto.guilds.get(msg.guild.id).music;
+	b.dispatcher = {};
+	b.currentlyPlayed = b.songs.shift();
+	if (!b.currentlyPlayed){
+		b.playing = false;
+		b.currentlyPlayed = '';
 		return 0;
 	}
 	
-	serv.dispatcher = message.guild.voiceConnection.playStream(yt(serv.currentlyPlayed.url, { filter: 'audioonly' }), { seek: 1, passes: 4 });
-	serv.dispatcher.on('end', () => {
-		play(serv, message);
+	b.dispatcher = message.guild.voiceConnection.playStream(yt(b.currentlyPlayed.url, { filter: 'audioonly' }), { seek: 1, passes: 4 });
+	b.dispatcher.on('end', () => {
+		play(botto, message);
 	});
-	serv.dispatcher.on('error', (e) => {
+	b.dispatcher.on('error', (e) => {
 		console.log(e);
 		return message.channel.sendMessage('Shit happened.').then(() => {
-			play(serv, message);
+			play(botto, message);
 		});
 	});
 }
