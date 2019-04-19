@@ -3,7 +3,7 @@ const Jimp = require('jimp');
 
 module.exports = {
 	name: 'anime',
-	help: 'Check if bot is online.',
+	help: 'Search sauce for anime. [gib image]',
 	alias: [],
 	run: (bot, msg) => {
 		let imageurl = msg.attachments.first().url || msg.embeds[0].image.url || 0;
