@@ -13,7 +13,10 @@ module.exports = {
 	help: 'Add song to list.',
 	alias: [],
 	run: async (bot, msg) => {
-		if(!msg.member.voiceChannel || !bot.guilds.get(msg.guild.id).music.voiceChannel) return msg.react('🔇');
+		let botCh = bot.guilds.get(msg.guild.id).music.voiceChannel;
+		let userCh = msg.member.voiceChannel;
+		
+		if(!userCh || !botCh || userCh !== botCh) return msg.react('🔇');
 		
 		let words = msg.content.split(' ');
 		if(!words[1]) return msg.channel.send('Huh?');
@@ -26,8 +29,7 @@ module.exports = {
 		
 		msg.channel.send(`\`\`\`
 Choose song: ${videos.map( (vid, index) => `\n${++index}. ${vid.title}`)}
-\`\`\``)
-		.then( async m => {
+\`\`\``).then( async m => {
 			await m.react("\u0031\u20E3");
 			await m.react("\u0032\u20E3");
 			await m.react("\u0033\u20E3");
@@ -57,17 +59,17 @@ Choose song: ${videos.map( (vid, index) => `\n${++index}. ${vid.title}`)}
 					let song = {url: v.url, title: vidTitle, thumbnail: v.thumbnails.high.url, date: v.publishedAt, duration: songDuration, requester: msg.author.username};
 					bot.guilds.get(msg.guild.id).music.songs.push( song );
 					msg.channel.send( {"embed": {
-						"color": msg.member.displayColor || "black",
-						"title": vidTitle || "No title",
-						"thumbnail": { "url": v.thumbnails.high.url || "" },
-						"timestamp": v.publishedAt || "No date",
+						"color": msg.member.displayColor,
+						"title": vidTitle,
+						"thumbnail": { "url": v.thumbnails.high.url },
+						"timestamp": v.publishedAt,
 						"author": {
 							"name": "Added:",
-							"url": v.url || ""
+							"url": v.url
 						},
 						"fields": [
 							{ "name": "Duration",
-							  "value": songDuration || "---" }
+							  "value": songDuration }
 						]
 					}} );
 				});

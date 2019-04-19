@@ -31,10 +31,10 @@ module.exports = {
 					}});
 				})
 				.catch(e => {
-					console.log(e.stack);
-					msg.channel.send(`Nothing.`);
+					console.log(e);
+					return msg.channel.send(`Nothing.`);
 				});
 			});
-		}).catch(e => console.log(e.stack));
+		}).catch(e => console.log(e));
 	}
 }

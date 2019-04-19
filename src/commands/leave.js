@@ -3,13 +3,12 @@ module.exports = {
 	help: 'Leave current voice channel.',
 	alias: ['l'],
 	run: (bot, msg) => {
-		let botChannel = bot.guilds.get(msg.guild.id).music.voiceChannel;
-		let userChannel = msg.member.voiceChannel || 0;
+		let botCh = bot.guilds.get(msg.guild.id).music.voiceChannel;
+		let userCh = msg.member.voiceChannel;
 		
-		if(!botChannel || !userChannel) return msg.react('🔇');
-		if(botChannel !== msg.member.voiceChannel) return msg.react('🔇');
+		if(!botCh || !userCh) return msg.react('🔇');
+		if(botCh !== userCh) return msg.react('🔇');
 		
-		botChannel.leave();
 		bot.guilds.get(msg.guild.id).music = {
 			playing: false,
 			songs: [],
@@ -17,5 +16,7 @@ module.exports = {
 			currentlyPlayed: '',
 			dispatcher: {}
 		};
+		
+		botCh.leave();
 	}
 }

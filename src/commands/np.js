@@ -1,20 +1,26 @@
 module.exports = {
 	name: 'np',
-	help: 'Check if bot is online.',
+	help: 'Info about current playing song.',
 	alias: [],
 	run: (bot, msg) => {
+		let botCh = bot.guilds.get(msg.guild.id).music.voiceChannel;
+		let userCh = msg.member.voiceChannel;
+		
+		if(!userCh || !botCh || userCh !== botCh) return msg.react('🔇');
+		
 		if(!bot.guilds.get(msg.guild.id).music.playing) return msg.channel.send(`Nothing.`);
+		
 		let v = bot.guilds.get(msg.guild.id).music.currentlyPlayed;
 		if(!v) return console.log('Error now playing.');
 		
 		msg.channel.send( {"embed": {
-			"color": msg.member.displayColor || 'black',
-			"title": v.title || 'No title',
+			"color": msg.member.displayColor,
+			"title": v.title,
 			"thumbnail": { "url": v.thumbnail },
-			"timestamp": v.date || 'No date',
+			"timestamp": v.date,
 			"author": { 
 				"name": 'Currently playing:',
-				"url": v.url || ""
+				"url": v.url
 			},
 			"fields": [
 				{ "name": "Duration",
