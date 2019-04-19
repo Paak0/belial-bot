@@ -1,11 +1,10 @@
 
-const request = require('superagent');
+
 const Discord = require('discord.js');
 const fs = require('fs');
 const bot = new Discord.Client();
 const config = require('./src/config.js');
 const botToken = config.token || process.env.BOT_TOKEN;
-const commands = require('./src/commands.js');
 const characters = require('./src/characters.json');
 bot.belial = require('./src/belial.js');
 
@@ -30,7 +29,7 @@ fs.readdir('./src/commands/', (e, f) => {
 	console.log(`Loading commands: done.`);
 });
 
-bot.on('ready', () => {
+bot.on('ready', async () => {
 	bot.guilds.map( g => {
 		g.cmdPrefix = '.';
 		g.msgCounter = 0;
@@ -49,6 +48,8 @@ bot.on('ready', () => {
     Belial is ready to serve.\n
 #################################\n`);
 	console.log(`Connected to ${bot.guilds.size} servers:\n${bot.guilds.map( g => '- '+g.name ).join('\n')}\n`);
+
+	bot.user.setActivity('.help');
 });
 
 
@@ -98,46 +99,8 @@ bot.on('message', async message => {
 				// message.channel.send('No, u.');
 				// break;
 				
-			// case 'play':
-				// if(!message.member.voiceChannel){
-					// message.react('🔇');
-					// return;
-				// }
-				// if (!servers[message.guild.id].songs[0]) return message.channel.send('Nothing to play.');
-				// if (servers[message.guild.id].playing) return message.channel.send("I'm already playing!!!");
-				
-				// servers[message.guild.id].playing = true;
-				
-				// (function play(song) {
-					// dispatcher = {};
-					// if (!song){
-						// servers[message.guild.id].playing = false;
-						// return;
-					// }
-					// currentlyPlayed = song.title;
-					
-					// dispatcher = message.guild.voiceConnection.playStream(yt(song.url, { filter: 'audioonly' }), { seek: 1, passes: 4 });
-					// dispatcher.on('end', () => {
-						// play(servers[message.guild.id].songs.shift());
-					// });
-					// dispatcher.on('error', () => {
-						// return message.channel.sendMessage('Shit happened.').then(() => {
-							// play(servers[message.guild.id].songs.shift());
-						// });
-					// });
-				// })(servers[message.guild.id].songs.shift());
-				// break;
-				
-			// case 'np': 
-			//if(servers[message.guild.id].playing) message.channel.send(`\`\`\`Playing: ${currentlyPlayed}\`\`\``);
-				// break;
-				
-			// case 'skip':
-				// if(!message.member.voiceChannel) return message.react('🔇');
-				// if(servers[message.guild.id].playing) dispatcher.end();
-				// break;
-				
 			// case 'test':
+				//const request = require('superagent');
 				// sounds = [];
 				// let count = 1;
 				
@@ -193,33 +156,7 @@ bot.on('message', async message => {
 });
 
 
-bot.on('messageReactionAdd', emo => {
-	if( emo.message.author.bot ) return;
-	if( emo.message.attachments.first() || emo.message.embeds[0] ){
-		let imageurl = emo.message.attachments.first().url || emo.message.embeds[0].image.url || 0;
-		if( !imageurl ) return console.log('<----- No image url. ----->');
-		let url = 'https://saucenao.com/search.php?output_type=2&numres=5&minsim=80&url=' + imageurl;
-		const filter = (reaction, user) => reaction.emoji.name === "\u0031\u20E3" && !user.bot;
-		const collector = emo.message.createReactionCollector(filter);
-		collector.on('collect', () => {
-			request.post(url).then( r => {
-				let sauce = r.body.results.filter( s => {return s.header.similarity > 80;} );
-				if(sauce.length < 1){
-					emo.message.channel.send(`No results.`);
-				}else{
-					emo.message.channel.send(`
-**SauceNAO:**\n${sauce.map( (s, index) => `**${++index}.** Accuracy: ${s.header.similarity}% ${s.data.ext_urls[0]}`).join('\n')}
-					`);
-				}
-			});
-			collector.stop();
-			emo.message.clearReactions();
-		});
-	}
-});
-
-
-bot.on('guildCreate', g => {
+bot.on('guildCreate', async g => {
 	console.log(`     ${client.user.username} has joined to ${g.name}.`);
 	g.cmdPrefix = '.';
 	g.msgCounter = 0;
@@ -233,7 +170,7 @@ bot.on('guildCreate', g => {
 	};
 });
 
-bot.on('guildMemberAdd', member => {
+bot.on('guildMemberAdd', async member => {
   const channel = member.guild.channels.find(ch => ch.name === 'general');
   if (!channel) return;
   channel.send(`<----- Welcome to the server, ${member}. Have fun with these guys. ----->`);
