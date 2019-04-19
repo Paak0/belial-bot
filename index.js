@@ -40,7 +40,7 @@ bot.on('ready', async () => {
 			currentlyPlayed: {},
 			dispatcher: {}
 		};
-		console.log(g.name);
+		console.log(g.music);
 	});
 	
     console.log(`
