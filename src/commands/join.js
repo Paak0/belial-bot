@@ -9,7 +9,6 @@ module.exports = {
 		if(botCh || !userCh) return msg.react('🔇');
 		if(botCh === userCh) return msg.channel.send("I'm already here.");
 		
-		bot.guilds.get(msg.guild.id).music.voiceChannel = userCh;
-		userCh.join();
+		userCh.join().then( connection => bot.guilds.get(msg.guild.id).music.voiceChannel = connection );
 	}
 }

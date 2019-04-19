@@ -9,6 +9,8 @@ module.exports = {
 		if(!botCh || !userCh) return msg.react('🔇');
 		if(botCh !== userCh) return msg.react('🔇');
 		
+		bot.guilds.get(msg.guild.id).music.voiceChannel.disconnect();
+		
 		bot.guilds.get(msg.guild.id).music = {
 			playing: false,
 			songs: [],
@@ -16,7 +18,5 @@ module.exports = {
 			currentlyPlayed: '',
 			dispatcher: {}
 		};
-		
-		botCh.leave();
 	}
 }

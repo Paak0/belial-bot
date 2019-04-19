@@ -22,7 +22,7 @@ module.exports = {
 }
 
 function play(botto, message){
-	let b = botto.guilds.get(msg.guild.id).music;
+	let b = botto.guilds.get(message.guild.id).music;
 	b.dispatcher = {};
 	b.currentlyPlayed = b.songs.shift();
 	if (!b.currentlyPlayed){
@@ -30,15 +30,16 @@ function play(botto, message){
 		b.currentlyPlayed = '';
 		return 0;
 	}
-	
-	b.dispatcher = message.guild.voiceConnection.playStream(yt(b.currentlyPlayed.url, { filter: 'audioonly' }), { seek: 1, passes: 4 });
-	b.dispatcher.on('end', () => {
+	let connect = b.voiceChannel;
+	let disp = connect.playStream(yt(b.currentlyPlayed.url, { filter: 'audioonly' }), { seek: 0 });
+	disp.on('end', () => {
 		play(botto, message);
 	});
-	b.dispatcher.on('error', (e) => {
+	disp.on('error', (e) => {
 		console.log(e);
 		return message.channel.sendMessage('Shit happened.').then(() => {
 			play(botto, message);
 		});
 	});
+	botto.guilds.get(message.guild.id).music.dispatcher = disp;
 }

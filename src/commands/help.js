@@ -4,7 +4,7 @@ module.exports = {
 	alias: [],
 	run: (bot, msg, words) => {
 		if(!words[1]){
-			msg.channel.send(`| ${bot.commands.map( c => c.name+' | ' )}`);
+			msg.channel.send(`${bot.commands.map( c => c.name )}`);
 		}else{
 			let command = bot.commands.get(words[1]) || null;
 			if(command){ 
