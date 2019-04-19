@@ -2,10 +2,9 @@ const request = require('superagent');
 
 module.exports = {
 	name: 'source',
-	help: 'Search for source of an image.',
+	help: 'Search for source of an image. [gib image]',
 	alias: ['sauce'],
 	run: (bot, msg , words) => {
-		if( msg.author.bot ) return 0;
 		if( !msg.attachments.first() && !msg.embeds[0] && !words[1]) return console.log('No img.');
 		
 		let imageUrl;
@@ -29,6 +28,6 @@ module.exports = {
 **SauceNAO:**\n${sauce.map( (s, index) => `**${++index}.** Accuracy: ${s.header.similarity}% ${s.data.ext_urls[0]}`).join('\n')}
 				`);
 			}
-		}).catch( e => console.log(e));
+		}).catch( e => console.log(e) );
 	}
 }

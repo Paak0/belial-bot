@@ -7,6 +7,7 @@ module.exports = {
 		let userCh = msg.member.voiceChannel;
 		
 		if(!userCh || !botCh || userCh !== botCh) return msg.react('🔇');
+		if(bot.guilds.get(msg.guild.id).music.songs.length < 1) return msg.channel.send(`Nothing in list.`); 
 		
 		let toSend = [];
 		bot.guilds.get(msg.guild.id).music.songs.forEach( (song, i) => toSend.push(`${i+1}. ${song.title} ( ${song.duration} ) - added by: ${song.requester}`) );

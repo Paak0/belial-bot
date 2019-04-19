@@ -21,23 +21,23 @@ module.exports = {
 	}
 }
 	
-function play(g, msg){
-	g.dispatcher = {};
-	g.currentlyPlayed = g.songs.shift();
-	if (!g.currentlyPlayed){
-		g.playing = false;
-		g.currentlyPlayed = '';
+function play(serv, message){
+	serv.dispatcher = {};
+	serv.currentlyPlayed = serv.songs.shift();
+	if (!serv.currentlyPlayed){
+		serv.playing = false;
+		serv.currentlyPlayed = '';
 		return 0;
 	}
 	
-	g.dispatcher = msg.guild.voiceConnection.playStream(yt(g.currentlyPlayed.url, { filter: 'audioonly' }), { seek: 1, passes: 4 });
-	g.dispatcher.on('end', () => {
-		play(g, msg);
+	serv.dispatcher = message.guild.voiceConnection.playStream(yt(serv.currentlyPlayed.url, { filter: 'audioonly' }), { seek: 1, passes: 4 });
+	serv.dispatcher.on('end', () => {
+		play(serv, message);
 	});
-	g.dispatcher.on('error', (e) => {
+	serv.dispatcher.on('error', (e) => {
 		console.log(e);
-		return msg.channel.sendMessage('Shit happened.').then(() => {
-			play(g, msg);
+		return message.channel.sendMessage('Shit happened.').then(() => {
+			play(serv, message);
 		});
 	});
 }
