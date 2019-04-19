@@ -15,7 +15,7 @@ module.exports = {
 			playing: false,
 			songs: [],
 			voiceChannel: null,
-			currentlyPlayed: '',
+			currentlyPlayed: {},
 			dispatcher: {}
 		};
 	}
