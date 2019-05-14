@@ -124,16 +124,12 @@ function testChar(words, message){
 					}
 					count++;
 					if(count >= 525){
-						console.log('<----- done ------>'+words[1]);
-						console.log(sounds);
-						message.channel.send(`\[${sounds.map( (s, index) => `\'${s}\'`).join(', ')}, \'other\'\]`);
+						return message.channel.send(`\[${sounds.map( (s, index) => `\'${s}\'`).join(', ')}, \'other\'\]`);
 					}
 				}).catch( (e) => {
 					count++;
 					if(count >= 525){
-						console.log('<----- done ------>'+words[1]);
-						console.log(sounds);
-						message.channel.send(`\[${sounds.map( (s, index) => `\'${s}\'`).join(', ')}, \'other\'\]`);
+						return message.channel.send(`\[${sounds.map( (s, index) => `\'${s}\'`).join(', ')}, \'other\'\]`);
 					}
 				} );
 			}
