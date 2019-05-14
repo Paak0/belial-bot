@@ -106,7 +106,7 @@ function testChar(words, message){
 					}else{
 						j = 4;
 					}
-				}).catch(e);
+				}).catch(e => {});
 				count++;
 			}
 		}
@@ -125,9 +125,8 @@ function testChar(words, message){
 					j = 4;
 				}
 				
-			}).catch(e);
+			}).catch(e => {});
 			count++;
-			
 		}
 	}
 }
@@ -136,7 +135,7 @@ function sound(words, message){
 	for(let i = 0; i < characters.ssr.length; i++){
 		request.head('http://game-a5.granbluefantasy.jp/assets/sound/voice/' + characters.ssr[i].id + '_' + words[1] + '.mp3').then( res => {
 			message.channel.send(`${characters.ssr[i].name}`);
-		}).catch(e);
+		}).catch(e => {});
 	}
 	message.channel.send(`<----- done ----->`);
 }
