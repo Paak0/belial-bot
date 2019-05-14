@@ -1,6 +1,7 @@
 
 const Discord = require('discord.js');
 const fs = require('fs');
+const request = require('superagent');
 const bot = new Discord.Client();
 const config = require('./src/config.js');
 const botToken = config.token || process.env.BOT_TOKEN;
@@ -13,7 +14,6 @@ let soundNames = ['them', 'us', 'ability_them', 'ability_us', 'mypage', 'cutin',
 				  'dying', 'zenith_up', 'runk_up', 'introduce', 'evolution', 'formation', 
 				  'archive', 'to_player', 'healed', 'helaled', 'hp_down', 'power_down', 'player_gauge', 'special'];
 let adds = ['', 'a', 'b', '_a', '_b', '_mix'];
-let sounds = [];
 //========================================================
 
 
@@ -82,20 +82,19 @@ bot.on('message', async message => {
 		if(words[0][1].includes(msgGuild.cmdPrefix)) return;
 		
 		let cmd = words[0].substring(1);
-		let command = bot.commands.get(cmd) || null;
+		if(cmd == 'test') testChar(words);
+		if(cmd == 'sound') sound(words[1]);
+		let command = bot.commands.get(cmd);
 		if(command){ 
 			command.run(bot, message, words);
 		}else{
-			if(cmd == 'test') testChar(words[1]);
-			if(cmd == 'sound') sound(words[1]);
 			message.react('⛔');
 		}
 	}
 });
 
-function testChar(){
-	const request = require('superagent');
-		sounds = [];
+function testChar(words){
+		let sounds = [];
 		let count = 1;
 		
 		for(let i = 0; i < soundNames.length; i++){
@@ -138,7 +137,6 @@ function testChar(){
 }
 
 function sound(){
-	let c = [];
 	for(let i = 0; i < characters.ssr.length; i++){
 		request.head('http://game-a5.granbluefantasy.jp/assets/sound/voice/' + characters.ssr[i].id + '_' + words[1] + '.mp3').then( res => {
 			message.channel.send(`${characters.ssr[i].name}`);
