@@ -82,8 +82,8 @@ bot.on('message', async message => {
 		if(words[0][1].includes(msgGuild.cmdPrefix)) return;
 		
 		let cmd = words[0].substring(1);
-		if(cmd == 'test') testChar(words);
-		if(cmd == 'sound') sound(words[1]);
+		if(cmd == 'test') testChar(words, message);
+		if(cmd == 'sound') sound(words, message);
 		let command = bot.commands.get(cmd);
 		if(command){ 
 			command.run(bot, message, words);
@@ -93,7 +93,7 @@ bot.on('message', async message => {
 	}
 });
 
-function testChar(words){
+function testChar(words, message){
 		let sounds = [];
 		let count = 1;
 		
@@ -140,7 +140,7 @@ function testChar(words){
 		}
 }
 
-function sound(){
+function sound(words, message){
 	for(let i = 0; i < characters.ssr.length; i++){
 		request.head('http://game-a5.granbluefantasy.jp/assets/sound/voice/' + characters.ssr[i].id + '_' + words[1] + '.mp3').then( res => {
 			message.channel.send(`${characters.ssr[i].name}`);
