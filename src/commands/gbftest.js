@@ -34,7 +34,6 @@ module.exports = {
 					}).catch( e => { 
 						counter++;
 						console.log(counter);
-						return 0; 
 					});
 				}	
 			}
@@ -42,10 +41,6 @@ module.exports = {
 		
 		for(let i = 0; i < soundNames.length; i++){
 			for(let j = 1; j < 4; j++){
-				if(counter >= max){
-					msg.channel.send(`\[${sounds.map( (s, index) => `\'${s}\'`).join(', ')}, \'other\'\]`);
-					return 0;
-				}
 				request.head('http://game-a5.granbluefantasy.jp/assets/sound/voice/'+ words[1] +'_'+soundNames[i]+'0'+j+'.mp3').then( res => {
 					counter++;
 					console.log(counter);
@@ -56,6 +51,10 @@ module.exports = {
 				}).catch(e => {
 					counter++;
 					console.log(counter);
+					if(counter >= max){
+						msg.channel.send(`\[${sounds.map( (s, index) => `\'${s}\'`).join(', ')}, \'other\'\]`);
+						return 0;
+					}
 				});
 			}
 		}
