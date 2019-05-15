@@ -18,6 +18,7 @@ module.exports = {
 		let counter = 0; //486 max   27x3x6
 		let max = soundNames.length * (iterations - 1) * adds.length;
 		console.log('id: '+words[1]);
+		console.log('max: '+max);
 		
 		for(let i = 0; i < soundNames.length; i++){
 			for(let j = 1; j < iterations; j++){
@@ -25,8 +26,10 @@ module.exports = {
 					let link = words[1]+'_'+soundNames[i]+j+adds[k]+'.mp3';
 					request.head('http://game-a5.granbluefantasy.jp/assets/sound/voice/'+link).then( res => {
 						counter++;
+						console.log(counter);
 						if(!sounds.includes(soundNames[i])){
 							sounds[i] = soundNames[i];
+							console.log('added: '+soundNames[i]);
 						}
 						if(counter === max){
 							console.log('done...');
@@ -34,6 +37,7 @@ module.exports = {
 						}
 					}).catch( e => { 
 						counter++;
+						console.log(counter);
 						return 0; 
 					});
 				}	
