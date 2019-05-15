@@ -16,7 +16,7 @@ module.exports = {
 		let sounds = [];
 		let iterations = 4;
 		let counter = 0; //486 max   27x3x6
-		let max = soundNames.length * (iterations - 1) * adds.length;
+		let max = soundNames.length * (iterations - 1) * (adds.length + 1);
 		console.log('id: '+words[1]);
 		console.log('max: '+max);
 		
@@ -29,11 +29,7 @@ module.exports = {
 						console.log(counter);
 						if(!sounds.includes(soundNames[i])){
 							sounds[i] = soundNames[i];
-							console.log('added: '+soundNames[i]);
-						}
-						if(counter === max){
-							console.log('done...');
-							return console.log(sounds);
+							console.log(counter+'. added: '+soundNames[i]);
 						}
 					}).catch( e => { 
 						counter++;
@@ -44,26 +40,24 @@ module.exports = {
 			}
 		}
 		
-		
-		// for(let i = 0; i < soundNames.length; i++){
-			// for(let j = 1; j < iterations; j++){
-				// for(let k = 0; k < adds.length; k++){
-					// let link = words[1]+'_'+soundNames[i]+j+adds[k]+'.mp3';
-					// request.head('http://game-a5.granbluefantasy.jp/assets/sound/voice/'+link).then( res => {
-						// if(!sounds.includes(soundNames[i])){
-							// sounds[i] = soundNames[i];
-							// console.log(sounds);
-						// }
-						// j = iterations;
-						// k = adds.length;
-						// if(i === soundNames.length - 1){
-							// console.log('done...');
-							// console.log(sounds);
-						// }
-					// }).catch( e => { return 0; });
-				// }	
-			// }
-		// }
-		
+		for(let i = 0; i < soundNames.length; i++){
+			for(let j = 1; j < 4; j++){
+				counter++;
+				console.log(counter);
+				if(counter >= max){
+					msg.channel.send(`\[${sounds.map( (s, index) => `\'${s}\'`).join(', ')}, \'other\'\]`);
+					return 0;
+				}
+				request.head('http://game-a5.granbluefantasy.jp/assets/sound/voice/'+ words[1] +'_'+soundNames[i]+'0'+j+'.mp3').then( res => {
+					if(!sounds.includes(soundNames[i])){
+						sounds[i] = soundNames[i];
+						console.log('added: '+soundNames[i]);
+					}
+				}).catch(e => {
+					counter++;
+					console.log(counter);
+				});
+			}
+		}
 	}
 }
