@@ -3,7 +3,7 @@ module.exports = {
 	
 	name: 'Belial',
 	desc: 'The Archangel of Cumming, Belial',
-	words: ["sodomy", "sex", "anal", "libido", "orgasm", "cum"],
+	words: ["sodomy", "sex", "anal", "libido", "orgasm", "cum", "cumming", "climax", "oppai"],
 	
 	messages: [
 		"UHOHOHOOOHO!", "Mhmmm, do you want to be my koneko-chuan?", "Let me show you my powerfull libido.", 
