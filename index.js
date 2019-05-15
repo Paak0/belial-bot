@@ -1,22 +1,11 @@
 
 const Discord = require('discord.js');
 const fs = require('fs');
-const request = require('superagent');
 const bot = new Discord.Client();
 const config = require('./src/config.js');
 const botToken = config.token || process.env.BOT_TOKEN;
 const characters = require('./src/characters.json');
 bot.belial = require('./src/belial.js');
-
-//========================================================   gbf sounds
-let soundNames = ['them', 'us', 'ability_them', 'ability_us', 'mypage', 'cutin', 
-				  'win', 'lose', 'attack', 'kill', 'ready', 'mortal', 'damage', 
-				  'dying', 'zenith_up', 'runk_up', 'introduce', 'evolution', 'formation', 
-				  'archive', 'to_player', 'healed', 'helaled', 'hp_down', 'power_down', 'player_gauge', 'special'];
-let adds = ['', 'a', 'b', '_a', '_b', '_mix'];
-//========================================================
-
-
 bot.commands = new Discord.Collection();
 
 fs.readdir('./src/commands/', (e, f) => {
@@ -40,7 +29,6 @@ bot.on('ready', async () => {
 			currentlyPlayed: {},
 			dispatcher: {}
 		};
-		console.log(g.music);
 	});
 	
     console.log(`
@@ -72,6 +60,8 @@ bot.on('message', async message => {
 			bot.guilds.get(message.guild.id).msgCounter = 1;
 			bot.guilds.get(message.guild.id).lastMsg = message.content;
 		}
+	}else{
+		bot.guilds.get(message.guild.id).msgCounter = 0;
 	}
 	
 	words.filter( function(word){
@@ -82,8 +72,6 @@ bot.on('message', async message => {
 		if(words[0][1].includes(msgGuild.cmdPrefix)) return;
 		
 		let cmd = words[0].substring(1);
-		if(cmd == 'test') testChar(words, message);
-		if(cmd == 'sound') sound(words, message);
 		let command = bot.commands.get(cmd);
 		if(command){ 
 			command.run(bot, message, words);
@@ -93,52 +81,54 @@ bot.on('message', async message => {
 	}
 });
 
-function testChar(words, message){
-	let sounds = [];
-	let count = 1;
+// function testChar(words, message){
+	// let sounds = [];
+	// let count = 1;
+	// console.log('id: '+words[1]);
+	// for(let i = 0; i < soundNames.length; i++){
+		// for(let j = 1; j < 4; j++){
+			// for(let k = 0; k < adds.length; k++){
+				// let link = words[1]+'_'+soundNames[i]+j+adds[k]+'.mp3';
+				// concole.log(link);
+				// request.head('http://game-a5.granbluefantasy.jp/assets/sound/voice/'+link).then( res => {
+					// if(!sounds.includes(soundNames[i])){
+						// sounds.push(soundNames[i]);
+					// }else{
+						// j = 4;
+					// }
+				// }).catch(e => {});
+				//count++;
+			// }
+		// }
+	// }
 	
-	for(let i = 0; i < soundNames.length; i++){
-		for(let j = 1; j < 4; j++){
-			for(let k = 0; k < adds.length; k++){
-				request.head('http://game-a5.granbluefantasy.jp/assets/sound/voice/'+ words[1] +'_'+soundNames[i]+j+adds[k]+'.mp3').then( res => {
-					if(!sounds.includes(soundNames[i])){
-						sounds[i] = soundNames[i];
-					}else{
-						j = 4;
-					}
-				}).catch(e => {});
-				count++;
-			}
-		}
-	}
-	
-	for(let i = 0; i < soundNames.length; i++){
-		for(let j = 1; j < 4; j++){
-			if(count >= 515){
-				message.channel.send(`\[${sounds.map( (s, index) => `\'${s}\'`).join(', ')}, \'other\'\]`);
-				return 0;
-			}
-			request.head('http://game-a5.granbluefantasy.jp/assets/sound/voice/'+ words[1] +'_'+soundNames[i]+'0'+j+'.mp3').then( res => {
-				if(!sounds.includes(soundNames[i])){
-						sounds[i] = soundNames[i];
-				}else{
-					j = 4;
-				}
+	// for(let i = 0; i < soundNames.length; i++){
+		// for(let j = 1; j < 4; j++){
+			// if(count >= 515){
+				// message.channel.send(`\[${sounds.map( (s, index) => `\'${s}\'`).join(', ')}, \'other\'\]`);
+				// return 0;
+			// }
+			// request.head('http://game-a5.granbluefantasy.jp/assets/sound/voice/'+ words[1] +'_'+soundNames[i]+'0'+j+'.mp3').then( res => {
+				// if(!sounds.includes(soundNames[i])){
+						// sounds.push(soundNames[i]);
+				// }else{
+					// j = 4;
+				// }
 				
-			}).catch(e => {});
-			count++;
-		}
-	}
-}
+			// }).catch(e => {});
+			// count++;
+		// }
+	// }
+// }
 
-function sound(words, message){
-	for(let i = 0; i < characters.ssr.length; i++){
-		request.head('http://game-a5.granbluefantasy.jp/assets/sound/voice/' + characters.ssr[i].id + '_' + words[1] + '.mp3').then( res => {
-			message.channel.send(`${characters.ssr[i].name}`);
-		}).catch(e => {});
-	}
-	message.channel.send(`<----- done ----->`);
-}
+// function sound(words, message){
+	// for(let i = 0; i < characters.ssr.length; i++){
+		// request.head('http://game-a5.granbluefantasy.jp/assets/sound/voice/' + characters.ssr[i].id + '_' + words[1] + '.mp3').then( res => {
+			// message.channel.send(`${characters.ssr[i].name}`);
+		// }).catch(e => {});
+	// }
+	// message.channel.send(`<----- done ----->`);
+// }
 
 
 
