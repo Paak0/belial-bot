@@ -52,7 +52,7 @@ module.exports = {
 				}).catch(e => {
 					counter++;
 					console.log(counter);
-					if(counter >= max){
+					if(counter === 567){
 						console.log('done...');
 						msg.channel.send(`\[${sounds.map( (s, index) => `\'${s}\'`).join(', ')}, \'other\'\]`);
 					}
