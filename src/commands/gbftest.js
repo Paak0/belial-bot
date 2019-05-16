@@ -57,7 +57,7 @@ function testSound(msg){
 			promises.push(
 				new Promise((resolve, reject) => {
 					request.head('http://game-a5.granbluefantasy.jp/assets/sound/voice/'+link);
-				});
+				})
 			);
 		}	
 	}
