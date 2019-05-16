@@ -49,25 +49,26 @@ module.exports = {
 
 function testSound(msg){
 	if(counter === soundNames.length) return msg.channel.send(`\[${sounds.map( (s, index) => `\'${s}\'`).join(', ')}, \'other\'\]`);;
-	let promises = [];
+	let urls = [];
+	soundNames.forEach(name => {
+		for(let j = 1; j < iterations; j++){
+			for(let k = 0; k < adds.length; k++){
+				let link = 'http://game-a5.granbluefantasy.jp/assets/sound/voice/'+id+'_'+name+j+adds[k]+'.mp3';
+				urls.push(link);
+			}	
+		}
+	});
+	console.log(urls);
 	
-	for(let j = 1; j < iterations; j++){
-		for(let k = 0; k < adds.length; k++){
-			let link = id+'_'+soundNames[counter]+j+adds[k]+'.mp3';
-			promises.push(
-				new Promise((resolve, reject) => {
-					request.head('http://game-a5.granbluefantasy.jp/assets/sound/voice/'+link);
-				})
-			);
-		}	
-	}
-	
-	Promise.race(promises).then( res => {
+	let promises = urls.map(url => fetch(url));
+	Promise.race(promises)
+	.then( res => {
 		sounds.push(soundNames[counter]);
 		counter++;
 		console.log('counter: '+counter);
 		console.log(sounds);
-	});
+	})
+	.catch( e => { return console.log('fail'); });
 	
 }
 
