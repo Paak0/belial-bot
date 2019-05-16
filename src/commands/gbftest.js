@@ -5,6 +5,10 @@ let soundNames = ['them', 'us', 'ability_them', 'ability_us', 'mypage', 'cutin',
 				  'dying', 'zenith_up', 'runk_up', 'introduce', 'evolution', 'formation', 
 				  'archive', 'to_player', 'healed', 'helaled', 'hp_down', 'power_down', 'player_gauge', 'special'];
 let adds = ['', 'a', 'b', '_a', '_b', '_mix'];
+let sounds = [];
+let iterations = 4;
+let max = soundNames.length * (iterations - 1) * (adds.length + 1);
+let counter = 0; //486 max   27x3x6
 
 module.exports = {
 	name: 'gbftest',
@@ -13,10 +17,7 @@ module.exports = {
 	run: (bot, msg, words) => {
 		if(msg.author.id != '324531038275633153') return msg.channel.send(`You aren't my master.`);
 		
-		let sounds = [];
-		let iterations = 4;
-		let counter = 0; //486 max   27x3x6
-		let max = soundNames.length * (iterations - 1) * (adds.length + 1);
+		sounds = [];
 		console.log('id: '+words[1]);
 		console.log('max: '+max);
 		
@@ -52,8 +53,8 @@ module.exports = {
 					counter++;
 					console.log(counter);
 					if(counter >= max){
+						console.log('done...');
 						msg.channel.send(`\[${sounds.map( (s, index) => `\'${s}\'`).join(', ')}, \'other\'\]`);
-						return 0;
 					}
 				});
 			}
