@@ -8,7 +8,7 @@
     "ffmpeg-binaries": "^4.0.0",
     "jimp": "^0.6.0",
     "libsodium-wrappers": "^0.7.3",
-    "node-fetch": "^2.3.0",
+    "node-fetch": "^2.6.7",
     "opusscript": "0.0.6",
     "simple-youtube-api": "^5.1.1",
     "superagent": "^4.0.0",
